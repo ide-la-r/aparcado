@@ -21,4 +21,23 @@ class Money
             ? number_format(intdiv($cents, 100), 0, ',', '.').' €'
             : self::format($cents);
     }
+
+    /**
+     * Y el camino de vuelta: lo que alguien escribe en un formulario, a céntimos.
+     *
+     * Aquí se escribe «35,50» con coma, pero el teclado numérico de un móvil pone
+     * un punto, así que hay que aceptar los dos. Se redondea porque «35,509»
+     * existe y un céntimo y medio no. Devuelve null cuando eso no es un número, y
+     * es quien llama el que decide si eso es un error o un campo vacío.
+     */
+    public static function toCents(mixed $amount): ?int
+    {
+        if (! is_string($amount) && ! is_numeric($amount)) {
+            return null;
+        }
+
+        $clean = str_replace([' ', '€', ','], ['', '', '.'], (string) $amount);
+
+        return is_numeric($clean) ? (int) round(((float) $clean) * 100) : null;
+    }
 }

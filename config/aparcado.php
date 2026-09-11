@@ -71,6 +71,7 @@ return [
      */
     'uploads' => [
         'avatar_disk' => 'public',
+        'cars_disk' => 'public',
         'documents_disk' => 'local',
         'max_kilobytes' => 4096,
     ],

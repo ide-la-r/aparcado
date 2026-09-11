@@ -21,7 +21,12 @@
 
             <nav class="ml-auto hidden items-center gap-1 sm:flex">
                 <a href="{{ route('cars.index') }}" class="btn btn-ghost">Coches</a>
-                <a href="{{ route('home') }}#como-funciona" class="btn btn-ghost">Cómo funciona</a>
+
+                @auth
+                    <a href="{{ route('my-cars.index') }}" class="btn btn-ghost">Mis coches</a>
+                @else
+                    <a href="{{ route('home') }}#como-funciona" class="btn btn-ghost">Cómo funciona</a>
+                @endauth
             </nav>
 
             <div class="ml-auto flex items-center gap-2 sm:ml-0">
@@ -53,6 +58,14 @@
             <div class="mx-auto max-w-6xl px-4 pt-6 sm:px-6">
                 <p class="rounded-xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800 ring-1 ring-emerald-200 ring-inset">
                     {{ session('status') }}
+                </p>
+            </div>
+        @endif
+
+        @if (session('warning'))
+            <div class="mx-auto max-w-6xl px-4 pt-6 sm:px-6">
+                <p class="rounded-xl bg-amber-50 px-4 py-3 text-sm font-medium text-amber-900 ring-1 ring-amber-200 ring-inset">
+                    {{ session('warning') }}
                 </p>
             </div>
         @endif
