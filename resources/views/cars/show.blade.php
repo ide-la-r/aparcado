@@ -141,10 +141,26 @@
                                     </div>
                                 </dl>
 
-                                <button type="button" class="btn btn-primary mt-4 w-full" disabled>Reservar</button>
-                                <p class="mt-2 text-center text-xs text-neutral-500">
-                                    Las reservas llegan en la próxima entrega.
-                                </p>
+                                @guest
+                                    <a href="{{ route('login') }}" class="btn btn-primary mt-4 w-full">Entrar para reservar</a>
+                                @elseif (auth()->id() === $car->owner_id)
+                                    <p class="mt-4 text-center text-sm text-neutral-500">Este coche es tuyo.</p>
+                                    <a href="{{ route('my-cars.edit', $car) }}" class="btn btn-secondary mt-2 w-full">Editarlo</a>
+                                @elseif (! auth()->user()->isVerified())
+                                    <a href="{{ route('profile.show') }}" class="btn btn-secondary mt-4 w-full">
+                                        Verifica tu cuenta para reservar
+                                    </a>
+                                @else
+                                    <form method="POST" action="{{ route('bookings.store', $car) }}" class="mt-4">
+                                        @csrf
+                                        <input type="hidden" name="from" value="{{ $from }}">
+                                        <input type="hidden" name="to" value="{{ $to }}">
+                                        <button type="submit" class="btn btn-primary w-full">Reservar</button>
+                                    </form>
+                                    <p class="mt-2 text-center text-xs text-neutral-500">
+                                        Aquí no se paga nada todavía: las fechas no son tuyas hasta pagarlas.
+                                    </p>
+                                @endguest
                             @else
                                 <p class="text-sm font-semibold text-neutral-900">Este coche está cogido esos días.</p>
                                 <p class="mt-1 text-sm text-neutral-600">

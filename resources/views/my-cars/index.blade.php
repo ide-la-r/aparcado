@@ -2,7 +2,11 @@
     <div class="mx-auto max-w-4xl px-4 py-10 sm:px-6">
         <div class="flex flex-wrap items-center justify-between gap-4">
             <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">Mis coches</h1>
-            <a href="{{ route('my-cars.create') }}" class="btn btn-primary">Publicar un coche</a>
+
+            <div class="flex flex-wrap gap-2">
+                <a href="{{ route('bookings.incoming') }}" class="btn btn-secondary">Lo que me han pedido</a>
+                <a href="{{ route('my-cars.create') }}" class="btn btn-primary">Publicar un coche</a>
+            </div>
         </div>
 
         @if ($cars->isEmpty())

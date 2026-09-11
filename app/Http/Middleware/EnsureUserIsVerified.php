@@ -19,9 +19,11 @@ class EnsureUserIsVerified
             return $next($request);
         }
 
+        // El aviso vale para las dos cosas que la verificación cierra —alquilar y
+        // publicar—, porque por aquí pasan las dos.
         $message = $request->user()?->hasSentDocuments()
-            ? 'Estamos mirando tus papeles. En cuanto estén, podrás publicar tu coche.'
-            : 'Para publicar un coche tenemos que ver tu documento de identidad y tu carné.';
+            ? 'Estamos mirando tus papeles. En cuanto estén, podrás alquilar y publicar.'
+            : 'Para alquilar un coche o publicar el tuyo tenemos que ver tu documento de identidad y tu carné.';
 
         return redirect()->route('profile.show')->with('warning', $message);
     }

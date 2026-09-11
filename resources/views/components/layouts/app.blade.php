@@ -23,6 +23,7 @@
                 <a href="{{ route('cars.index') }}" class="btn btn-ghost">Coches</a>
 
                 @auth
+                    <a href="{{ route('bookings.index') }}" class="btn btn-ghost">Mis reservas</a>
                     <a href="{{ route('my-cars.index') }}" class="btn btn-ghost">Mis coches</a>
                 @else
                     <a href="{{ route('home') }}#como-funciona" class="btn btn-ghost">Cómo funciona</a>

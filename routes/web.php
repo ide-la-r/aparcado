@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyCarController;
@@ -29,9 +30,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/perfil/papeles', [ProfileController::class, 'documents'])->name('profile.documents');
     Route::put('/perfil/contrasena', [ProfileController::class, 'password'])->name('profile.password');
 
-    // Mis coches: la lista se ve siempre, pero publicar o editar exige tener los
+    // Las listas se ven siempre; pedir un coche o publicar el tuyo exige tener los
     // papeles comprobados.
     Route::get('/mis-coches', [MyCarController::class, 'index'])->name('my-cars.index');
+    Route::get('/mis-reservas', [BookingController::class, 'index'])->name('bookings.index');
+    Route::get('/reservas-de-mis-coches', [BookingController::class, 'incoming'])->name('bookings.incoming');
+    Route::patch('/reservas/{booking}/cancelar', [BookingController::class, 'cancel'])->name('bookings.cancel');
 
     Route::middleware('identity')->group(function () {
         Route::get('/mis-coches/nuevo', [MyCarController::class, 'create'])->name('my-cars.create');
@@ -41,5 +45,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/mis-coches/{car}', [MyCarController::class, 'destroy'])->name('my-cars.destroy');
         Route::delete('/mis-coches/{car}/fotos/{photo}', [MyCarController::class, 'destroyPhoto'])
             ->name('my-cars.photos.destroy');
+
+        Route::post('/coches/{car}/reservar', [BookingController::class, 'store'])->name('bookings.store');
     });
 });
