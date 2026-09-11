@@ -26,10 +26,25 @@ enum Plan: string
         return (int) $this->config('priority');
     }
 
-    /** Cuántos huecos de cabecera se reparten entre los coches de este plan. */
-    public function slots(): int
+    /**
+     * El trozo de SQL que traduce el plan guardado en una fila a su prioridad, con
+     * sus valores como parámetros. Está aquí para que el orden del catálogo y los
+     * precios salgan del mismo sitio: un plan nuevo en la configuración entra solo.
+     *
+     * @return array{0: string, 1: array<int, string|int>}
+     */
+    public static function sqlPriorityCase(string $column): array
     {
-        return (int) $this->config('slots');
+        $sql = 'case '.$column;
+        $bindings = [];
+
+        foreach (self::cases() as $plan) {
+            $sql .= ' when ? then ?';
+            $bindings[] = $plan->value;
+            $bindings[] = $plan->priority();
+        }
+
+        return [$sql.' else 0 end', $bindings];
     }
 
     private function config(string $key): mixed

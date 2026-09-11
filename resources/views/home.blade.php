@@ -15,10 +15,13 @@
                     mensaje.
                 </p>
 
-                <div class="mt-8 flex flex-wrap gap-3">
-                    <a href="{{ route('cars.index') }}" class="btn btn-primary">Ver coches</a>
-                    <a href="#como-funciona" class="btn btn-secondary">Cómo funciona</a>
+                <div class="mt-8">
+                    <x-car-search :provinces="$provinces" />
                 </div>
+
+                <p class="mt-6 text-sm text-neutral-500">
+                    ¿Es la primera vez? <a href="#como-funciona" class="font-medium text-brand-700 underline decoration-brand-300 underline-offset-2 hover:decoration-brand-600">Mira cómo funciona</a>.
+                </p>
             </div>
         </div>
     </section>

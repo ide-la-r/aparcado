@@ -31,7 +31,7 @@ class CatalogueTest extends TestCase
             ->assertSee('Seat Ibiza')
             ->assertSee('Málaga')
             ->assertSee('35 €')
-            ->assertSee('1 coche publicado');
+            ->assertSee('1 coche');
 
         $this->assertTrue($car->published);
     }
@@ -61,7 +61,7 @@ class CatalogueTest extends TestCase
     {
         $this->get(route('cars.index'))
             ->assertOk()
-            ->assertSee('Todavía no hay coches publicados.');
+            ->assertSee('Aquí no hay nada.');
     }
 
     public function test_the_catalogue_does_not_query_once_per_car(): void

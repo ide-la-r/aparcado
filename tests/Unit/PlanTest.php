@@ -24,7 +24,6 @@ class PlanTest extends TestCase
         foreach (Plan::cases() as $plan) {
             $this->assertNotSame('', $plan->label());
             $this->assertGreaterThan(0, $plan->priceCents());
-            $this->assertGreaterThan(0, $plan->slots());
         }
     }
 
