@@ -1,0 +1,60 @@
+# Aparcado
+
+Alquiler de coches entre particulares. El dueño publica su coche cuando no lo usa,
+otra persona lo reserva por días, y los dos hablan por el chat de la propia web
+antes y durante el alquiler.
+
+## De dónde viene
+
+Es la reconstrucción de **SocialiCar**, mi Trabajo de Fin de Grado, hecho en equipo
+con [@pma152402](https://github.com/pma152402). La idea, el alcance y las decisiones
+de producto son de aquel trabajo conjunto; el código de aquí es nuevo y mío.
+
+Aquello era PHP a mano: consultas sueltas en las vistas, ficheros de 79 KB, diecisiete
+hojas de estilo y un pago de PayPal que se resolvía entero en el navegador y no dejaba
+rastro en la base de datos. Funcionaba, y aprendí montándolo. Esto es lo mismo bien
+hecho: Laravel, una capa de datos con relaciones de verdad, los pagos verificados en el
+servidor y tests.
+
+## Qué hace
+
+- **Catálogo** de coches por provincia y fechas, que sólo enseña los que están libres
+  en el rango pedido.
+- **Ficha del coche** con fotos, extras, situación en el mapa y precio por día.
+- **Reservas** por rango de fechas, sin solaparse con las que ya existen.
+- **Perfil** con verificación de identidad (DNI/NIE/pasaporte y carné de conducir).
+- **Planes de suscripción** para dueños: el plan decide qué puesto ocupa tu coche en
+  el catálogo.
+- **Chat** entre dueño e interesado, por conversación.
+- **Pagos** con PayPal: la orden se crea y se captura en el servidor, se comprueba el
+  importe y queda registrada.
+
+## Cómo se levanta
+
+```sh
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+touch database/database.sqlite
+php artisan migrate --seed
+composer run dev
+```
+
+## Cómo está montado
+
+| Pieza | Dónde |
+| --- | --- |
+| Modelos y relaciones | `app/Models` |
+| Lógica de dominio | `app/Services` |
+| Pantallas | `resources/views` |
+| Esquema | `database/migrations` |
+| Datos de ejemplo | `database/seeders` |
+| Tests | `tests/Feature`, `tests/Unit` |
+
+Las convenciones del repositorio están en [`AGENTS.md`](AGENTS.md).
+
+## Estado
+
+En construcción. Lo que hay hecho y lo que falta, en
+[las incidencias](https://github.com/ide-la-r/aparcado/issues).
