@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Car;
+use App\Http\Requests\SearchCarsRequest;
+use App\Models\Province;
+use App\Services\Catalogue\CarSearch;
 use Illuminate\View\View;
 
 class CarController extends Controller
 {
-    public function index(): View
+    public function index(SearchCarsRequest $request): View
     {
-        $cars = Car::query()
-            ->published()
-            // Con las relaciones cargadas de golpe: la tarjeta pinta la provincia y
-            // la primera foto de cada coche, y sin esto serían dos consultas por
-            // coche en la rejilla.
-            ->with(['province', 'photos'])
-            ->latest('id')
-            ->paginate(12);
+        $filters = $request->filters();
 
-        return view('cars.index', ['cars' => $cars]);
+        return view('cars.index', [
+            'cars' => CarSearch::fromFilters($filters)->paginate(),
+            'provinces' => Province::query()->orderBy('name')->get(),
+            'filters' => $filters,
+        ]);
     }
 }
