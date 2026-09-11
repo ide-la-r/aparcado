@@ -1,6 +1,9 @@
 @props(['car'])
 
-<a href="#" class="card group block overflow-hidden transition hover:ring-brand-300">
+{{-- Las fechas de la búsqueda viajan con el enlace, así que la ficha abre ya
+     diciendo si está libre esos días y lo que cuesta. --}}
+<a href="{{ route('cars.show', ['car' => $car, ...array_filter(request()->only(['from', 'to']))]) }}"
+   class="card group block overflow-hidden transition hover:ring-brand-300">
     <x-car-photo :car="$car" />
 
     <div class="p-4">
