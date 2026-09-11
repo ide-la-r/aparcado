@@ -26,6 +26,16 @@ php artisan migrate --force || {
     exit 1
 }
 
+# Los datos de referencia —las 52 provincias y el catálogo de extras— NO son datos
+# de ejemplo: sin ellos no se puede publicar un coche, porque la provincia es una
+# clave ajena, y el buscador sale con el desplegable vacío. Se siembran en cada
+# arranque porque los dos sembradores hacen `upsert`: repetirlo no duplica nada, y
+# así una provincia o un extra nuevos entran solos en el siguiente despliegue.
+php artisan db:seed --class='Database\Seeders\ReferenceDataSeeder' --force || {
+    echo "✗ No se han podido sembrar los datos de referencia"
+    exit 1
+}
+
 echo "→ Servidor escuchando en ${SERVER_NAME}"
 
 exec frankenphp run --config /etc/caddy/Caddyfile
