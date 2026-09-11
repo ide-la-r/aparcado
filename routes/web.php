@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MyCarController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
@@ -17,7 +18,7 @@ Route::get('/coches', [CarController::class, 'index'])->name('cars.index');
 Route::get('/coches/{car}', [CarController::class, 'show'])->name('cars.show');
 
 // El aviso de PayPal viene de fuera: sin sesión, sin usuario y sin token, así que
-// no puede vivir dentro del grupo `web` con CSRF. Su comprobación es la firma.
+// no puede pasar por la comprobación de CSRF. Lo que lo protege es su firma.
 Route::post('/pagos/paypal/aviso', [PaymentController::class, 'webhook'])
     ->withoutMiddleware([VerifyCsrfToken::class])
     ->name('payments.webhook');
@@ -39,7 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/perfil/contrasena', [ProfileController::class, 'password'])->name('profile.password');
 
     // Las listas se ven siempre; pedir un coche o publicar el tuyo exige tener los
-    // papeles comprobados.
+    // papeles comprobados. Hablar con el dueño, no: para eso está el chat.
     Route::get('/mis-coches', [MyCarController::class, 'index'])->name('my-cars.index');
     Route::get('/mis-reservas', [BookingController::class, 'index'])->name('bookings.index');
     Route::get('/reservas-de-mis-coches', [BookingController::class, 'incoming'])->name('bookings.incoming');
@@ -48,6 +49,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/reservas/{booking}/pagar', [PaymentController::class, 'show'])->name('payments.show');
     Route::post('/reservas/{booking}/orden', [PaymentController::class, 'createOrder'])->name('payments.order');
     Route::post('/reservas/{booking}/cobrar', [PaymentController::class, 'capture'])->name('payments.capture');
+
+    Route::get('/mensajes', [MessageController::class, 'index'])->name('messages.index');
+    Route::post('/coches/{car}/escribir', [MessageController::class, 'start'])->name('messages.start');
+    Route::get('/mensajes/{conversation}', [MessageController::class, 'show'])->name('messages.show');
+    Route::post('/mensajes/{conversation}', [MessageController::class, 'store'])->name('messages.store');
+    Route::get('/mensajes/{conversation}/nuevos', [MessageController::class, 'poll'])->name('messages.poll');
 
     Route::middleware('identity')->group(function () {
         Route::get('/mis-coches/nuevo', [MyCarController::class, 'create'])->name('my-cars.create');

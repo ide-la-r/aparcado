@@ -189,6 +189,19 @@
                             </p>
                         </div>
                     </div>
+
+                    {{-- Hablar con el dueño no pide tener los papeles comprobados:
+                         preguntar es gratis y es lo que hace que alguien reserve. --}}
+                    @auth
+                        @if (auth()->id() !== $car->owner_id)
+                            <form method="POST" action="{{ route('messages.start', $car) }}" class="mt-4">
+                                @csrf
+                                <button type="submit" class="btn btn-secondary w-full">Escribir al dueño</button>
+                            </form>
+                        @endif
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-secondary mt-4 w-full">Entrar para escribirle</a>
+                    @endauth
                 </div>
             </aside>
         </div>

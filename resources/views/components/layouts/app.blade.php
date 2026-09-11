@@ -23,6 +23,18 @@
                 <a href="{{ route('cars.index') }}" class="btn btn-ghost">Coches</a>
 
                 @auth
+                    @php $unread = auth()->user()->unreadMessages(); @endphp
+
+                    <a href="{{ route('messages.index') }}" class="btn btn-ghost">
+                        Mensajes
+
+                        @if ($unread > 0)
+                            <span class="flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-600 px-1.5 text-xs font-semibold text-white">
+                                {{ $unread }}
+                            </span>
+                        @endif
+                    </a>
+
                     <a href="{{ route('bookings.index') }}" class="btn btn-ghost">Mis reservas</a>
                     <a href="{{ route('my-cars.index') }}" class="btn btn-ghost">Mis coches</a>
                 @else

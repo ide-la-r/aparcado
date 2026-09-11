@@ -6,6 +6,7 @@ use App\Casts\DateOnly;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -78,6 +79,19 @@ class User extends Authenticatable
             $this->hasSentDocuments() => 'pending',
             default => 'missing',
         };
+    }
+
+    /**
+     * Los mensajes que le han escrito y todavía no ha abierto. Lo pinta la cabecera
+     * en todas las páginas, así que es una cuenta y no una lista.
+     */
+    public function unreadMessages(): int
+    {
+        return Message::query()
+            ->whereHas('conversation', fn (Builder $conversation) => $conversation->of($this))
+            ->where('sender_id', '!=', $this->id)
+            ->whereNull('read_at')
+            ->count();
     }
 
     /**
