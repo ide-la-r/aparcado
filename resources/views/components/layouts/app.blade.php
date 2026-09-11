@@ -100,23 +100,37 @@
                     </p>
                 </div>
 
-                <nav class="text-sm">
-                    <p class="text-xs font-semibold tracking-wide text-white/40 uppercase">La web</p>
-                    <ul class="mt-3 space-y-2 text-white/70">
-                        <li><a class="hover:text-white" href="{{ route('cars.index') }}">Coches</a></li>
-                        <li><a class="hover:text-white" href="{{ route('home') }}#como-funciona">Cómo funciona</a></li>
-                        @guest
-                            <li><a class="hover:text-white" href="{{ route('register') }}">Crear cuenta</a></li>
-                        @else
-                            <li><a class="hover:text-white" href="{{ route('my-cars.index') }}">Mis coches</a></li>
-                        @endguest
-                    </ul>
-                </nav>
+                <div class="grid gap-8 text-sm sm:grid-cols-2 sm:gap-14">
+                    <nav>
+                        <p class="text-xs font-semibold tracking-wide text-white/40 uppercase">La web</p>
+                        <ul class="mt-3 space-y-2 text-white/70">
+                            <li><a class="hover:text-white" href="{{ route('cars.index') }}">Coches</a></li>
+                            <li><a class="hover:text-white" href="{{ route('home') }}#como-funciona">Cómo funciona</a></li>
+                            <li><a class="hover:text-white" href="{{ route('pages.help') }}">Ayuda</a></li>
+                            @guest
+                                <li><a class="hover:text-white" href="{{ route('register') }}">Crear cuenta</a></li>
+                            @else
+                                <li><a class="hover:text-white" href="{{ route('my-cars.index') }}">Mis coches</a></li>
+                            @endguest
+                        </ul>
+                    </nav>
+
+                    <nav>
+                        <p class="text-xs font-semibold tracking-wide text-white/40 uppercase">Lo legal</p>
+                        <ul class="mt-3 space-y-2 text-white/70">
+                            <li><a class="hover:text-white" href="{{ route('pages.about') }}">Sobre Aparcado</a></li>
+                            <li><a class="hover:text-white" href="{{ route('pages.privacy') }}">Privacidad</a></li>
+                            <li><a class="hover:text-white" href="{{ route('pages.cookies') }}">Cookies</a></li>
+                            <li><a class="hover:text-white" href="{{ route('pages.legal') }}">Aviso legal</a></li>
+                            <li><a class="hover:text-white" href="{{ route('pages.contact') }}">Contacto</a></li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
 
             <p class="mt-12 border-t border-white/10 pt-6 text-xs text-white/40">
-                Proyecto personal, sin ánimo de lucro. La idea viene de SocialiCar, un trabajo
-                de fin de grado hecho en equipo.
+                Proyecto personal, sin ánimo de lucro y sin alquileres reales. La idea viene
+                de SocialiCar, un trabajo de fin de grado hecho en equipo.
             </p>
         </div>
     </footer>

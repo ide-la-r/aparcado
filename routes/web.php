@@ -15,6 +15,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', HomeController::class)->name('home');
 
 Route::get('/coches', [CarController::class, 'index'])->name('cars.index');
+
+// Páginas de siempre: sin datos, sin sesión y sin controlador.
+Route::view('/sobre-aparcado', 'pages.about')->name('pages.about');
+Route::view('/ayuda', 'pages.help')->name('pages.help');
+Route::view('/contacto', 'pages.contact')->name('pages.contact');
+Route::view('/aviso-legal', 'pages.legal')->name('pages.legal');
+Route::view('/privacidad', 'pages.privacy')->name('pages.privacy');
+Route::view('/cookies', 'pages.cookies')->name('pages.cookies');
 Route::get('/coches/{car}', [CarController::class, 'show'])->name('cars.show');
 
 // El aviso de PayPal viene de fuera: sin sesión, sin usuario y sin token, así que
