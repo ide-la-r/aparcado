@@ -60,6 +60,12 @@ return [
     'min_age' => 18,
 
     /*
+     * El token que comparten el servicio y el cron de GitHub Actions. Sin valor,
+     * las rutas internas devuelven 404: una llave vacía no es una llave.
+     */
+    'internal_token' => env('INTERNAL_TASK_TOKEN'),
+
+    /*
      * Los ficheros que sube la gente.
      *
      * El DNI y el carné van al disco **privado**: son datos sensibles y no los pide
@@ -70,9 +76,14 @@ return [
      * La foto de perfil sí es para verse, así que va al disco público.
      */
     'uploads' => [
-        'avatar_disk' => 'public',
-        'cars_disk' => 'public',
-        'documents_disk' => 'local',
+        /*
+         * Salen del entorno porque en Render el disco del contenedor se borra en
+         * cada despliegue: allí los dos apuntan a un bucket de S3 (R2 o B2, los
+         * dos con 10 GB gratis) y en local a los discos de siempre.
+         */
+        'avatar_disk' => env('UPLOADS_PUBLIC_DISK', 'public'),
+        'cars_disk' => env('UPLOADS_PUBLIC_DISK', 'public'),
+        'documents_disk' => env('UPLOADS_PRIVATE_DISK', 'local'),
         'max_kilobytes' => 4096,
     ],
 

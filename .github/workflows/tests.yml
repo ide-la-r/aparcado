@@ -60,3 +60,31 @@ jobs:
 
       - name: Compilar
         run: npm run build
+
+  # La imagen se construye aquí en cada cambio, no en el despliegue: un
+  # Dockerfile roto tiene que salir en una PR y no cuando Render intenta
+  # levantar el servicio.
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Construir la imagen
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          load: true
+          tags: aparcado:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Que compile no basta: hay que ver que el contenedor arranca. Sin base de
+      # datos las migraciones fallan a propósito, así que lo que se comprueba es
+      # que PHP y las extensiones están y que el entrypoint llega hasta ahí.
+      - name: Comprobar que PHP y sus extensiones están dentro
+        run: |
+          docker run --rm --entrypoint php aparcado:ci -v
+          docker run --rm --entrypoint php aparcado:ci -m | grep -E '^(pdo_pgsql|gd|intl|zip|opcache)$'
+          docker run --rm --entrypoint php aparcado:ci artisan --version

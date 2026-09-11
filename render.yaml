@@ -1,0 +1,91 @@
+# Despliegue en Render con coste cero.
+#
+# El plan gratuito no pide tarjeta, pero duerme el servicio tras 15 minutos sin
+# tráfico: la primera visita después de eso tarda medio minuto en cargar. Da
+# igual para lo que es esto.
+#
+# La base de datos NO va aquí: el Postgres gratuito de Render caduca a los 30
+# días. Se usa uno de Neon (gratis, sin tarjeta) y se pasa por DB_URL.
+#
+# Y ojo con las subidas: el disco de Render es efímero, así que las fotos y los
+# papeles desaparecen en cada despliegue salvo que se configure S3 (ver abajo).
+
+services:
+    - type: web
+      name: aparcado
+      runtime: docker
+      plan: free
+      region: frankfurt
+      healthCheckPath: /up
+      autoDeploy: true
+      envVars:
+          - key: APP_NAME
+            value: Aparcado
+          - key: APP_ENV
+            value: production
+          - key: APP_DEBUG
+            value: false
+          - key: APP_KEY
+            sync: false # php artisan key:generate --show
+          - key: APP_URL
+            sync: false # https://aparcado.onrender.com
+          - key: APP_LOCALE
+            value: es
+          - key: APP_FALLBACK_LOCALE
+            value: en
+          - key: APP_TIMEZONE
+            value: Europe/Madrid
+
+          # Postgres externo (Neon). La cadena entera en DB_URL.
+          - key: DB_CONNECTION
+            value: pgsql
+          - key: DB_URL
+            sync: false
+
+          # Con una sola instancia pequeña, la base de datos hace de todo
+          - key: SESSION_DRIVER
+            value: database
+          - key: CACHE_STORE
+            value: database
+          - key: QUEUE_CONNECTION
+            value: database
+          - key: LOG_CHANNEL
+            value: stderr
+
+          # Pagos. Se saca una aplicación en developer.paypal.com, en
+          # «Apps & Credentials», con el conmutador en «Sandbox».
+          - key: PAYPAL_MODE
+            value: sandbox
+          - key: PAYPAL_CLIENT_ID
+            sync: false
+          - key: PAYPAL_SECRET
+            sync: false
+          - key: PAYPAL_WEBHOOK_ID
+            sync: false # el del webhook que apunte a /pagos/paypal/aviso
+
+          # Subidas. El disco del contenedor se borra en cada despliegue, así que
+          # sin esto las fotos y los papeles duran hasta el siguiente. Con una
+          # cuenta de Cloudflare R2 o Backblaze B2 (las dos con 10 GB gratis) se
+          # ponen los dos discos en «s3» y «s3-private» y dejan de perderse.
+          - key: UPLOADS_PUBLIC_DISK
+            value: public
+          - key: UPLOADS_PRIVATE_DISK
+            value: local
+          - key: AWS_ACCESS_KEY_ID
+            sync: false
+          - key: AWS_SECRET_ACCESS_KEY
+            sync: false
+          - key: AWS_BUCKET
+            sync: false
+          - key: AWS_ENDPOINT
+            sync: false # el de R2 o B2
+          - key: AWS_URL
+            sync: false # la dirección pública del bucket
+          - key: AWS_DEFAULT_REGION
+            value: auto
+          - key: AWS_USE_PATH_STYLE_ENDPOINT
+            value: true
+
+          # Token compartido con el cron de GitHub Actions
+          - key: INTERNAL_TASK_TOKEN
+            generateValue: true

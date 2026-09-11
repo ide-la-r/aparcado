@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureInternalToken;
 use App\Http\Middleware\EnsureUserIsVerified;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -19,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'identity' => EnsureUserIsVerified::class,
+            'internal' => EnsureInternalToken::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

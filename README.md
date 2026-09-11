@@ -60,6 +60,30 @@ PAYPAL_WEBHOOK_ID=...
 
 Sin ellas la pantalla de pago lo dice y no se rompe nada.
 
+## Cómo se despliega
+
+Render (plan gratuito, sin tarjeta) + Postgres de Neon + GitHub Actions para lo
+que en un servidor normal haría el cron. El contenedor es FrankenPHP: servidor
+web y PHP en un solo proceso, que en 512 MB de RAM se nota.
+
+1. **Base de datos.** Un proyecto en [Neon](https://neon.tech) y su cadena de
+   conexión en `DB_URL`. El Postgres gratuito de Render no vale: caduca a los 30
+   días.
+2. **Servicio.** «New > Blueprint» apuntando a este repositorio; `render.yaml`
+   trae todo lo demás. Las variables marcadas `sync: false` se rellenan a mano
+   (`APP_KEY` sale de `php artisan key:generate --show`).
+3. **Secretos del repositorio en GitHub**, para los flujos programados:
+   `APP_URL` y `INTERNAL_TASK_TOKEN` (el mismo valor que la variable del
+   servicio).
+4. **Subidas.** El disco del contenedor **se borra en cada despliegue**. Con
+   `UPLOADS_PUBLIC_DISK=public` las fotos duran hasta el siguiente; para que
+   sobrevivan hay que poner un bucket S3 —Cloudflare R2 o Backblaze B2, los dos
+   con 10 GB gratis— y cambiar los dos discos a `s3` y `s3-private`.
+
+El servicio duerme tras quince minutos sin tráfico y tarda medio minuto en
+levantarse. `keepalive.yml` lo mantiene despierto de 7 a 22, y de noche lo deja
+dormir.
+
 ## Cómo está montado
 
 | Pieza | Dónde |

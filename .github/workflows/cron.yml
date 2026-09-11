@@ -1,0 +1,43 @@
+# Cron externo: en el plan gratuito de Render no hay ni scheduler ni
+# trabajadores, y sus tareas programadas son de pago. GitHub Actions hace ese
+# trabajo gratis.
+#
+# Secretos necesarios en el repositorio:
+#   APP_URL              https://aparcado.onrender.com
+#   INTERNAL_TASK_TOKEN  el mismo valor que la variable del servicio en Render
+
+name: Tareas programadas
+
+on:
+    schedule:
+        # De madrugada, hora de España: a esa hora nadie está reservando.
+        - cron: '10 3 * * *'
+    workflow_dispatch:
+
+jobs:
+    close-bookings:
+        runs-on: ubuntu-latest
+
+        steps:
+            # El servicio duerme tras quince minutos sin tráfico y tarda medio
+            # minuto en levantarse, así que hay que insistir antes de darlo por
+            # caído.
+            - name: Despertar el servicio
+              run: |
+                  for intento in 1 2 3 4 5 6; do
+                    if curl -fsS --max-time 60 "${{ secrets.APP_URL }}/up" > /dev/null; then
+                      echo "Servicio despierto en el intento $intento"
+                      exit 0
+                    fi
+                    echo "Todavía arrancando… (intento $intento)"
+                    sleep 20
+                  done
+                  echo "El servicio no ha respondido a tiempo"
+                  exit 1
+
+            - name: Cerrar las reservas que ya pasaron
+              run: |
+                  curl -fsS --max-time 120 -X POST \
+                    -H "Authorization: Bearer ${{ secrets.INTERNAL_TASK_TOKEN }}" \
+                    -H "Accept: application/json" \
+                    "${{ secrets.APP_URL }}/internal/close-bookings"

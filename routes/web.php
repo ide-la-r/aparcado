@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InternalTaskController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MyCarController;
 use App\Http\Controllers\PaymentController;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', HomeController::class)->name('home');
 
 Route::get('/coches', [CarController::class, 'index'])->name('cars.index');
+Route::get('/coches/{car}', [CarController::class, 'show'])->name('cars.show');
 
 // Páginas de siempre: sin datos, sin sesión y sin controlador.
 Route::view('/sobre-aparcado', 'pages.about')->name('pages.about');
@@ -23,13 +25,20 @@ Route::view('/contacto', 'pages.contact')->name('pages.contact');
 Route::view('/aviso-legal', 'pages.legal')->name('pages.legal');
 Route::view('/privacidad', 'pages.privacy')->name('pages.privacy');
 Route::view('/cookies', 'pages.cookies')->name('pages.cookies');
-Route::get('/coches/{car}', [CarController::class, 'show'])->name('cars.show');
 
 // El aviso de PayPal viene de fuera: sin sesión, sin usuario y sin token, así que
 // no puede pasar por la comprobación de CSRF. Lo que lo protege es su firma.
 Route::post('/pagos/paypal/aviso', [PaymentController::class, 'webhook'])
     ->withoutMiddleware([VerifyCsrfToken::class])
     ->name('payments.webhook');
+
+// Lo que en un servidor normal haría el cron. En el plan gratuito de Render no
+// hay ni cron ni trabajadores, así que lo llama un flujo de GitHub Actions una
+// vez al día, y de paso despierta el contenedor dormido.
+Route::middleware(['internal'])->withoutMiddleware([VerifyCsrfToken::class])->prefix('internal')->group(function () {
+    Route::post('/close-bookings', [InternalTaskController::class, 'closeBookings'])
+        ->name('internal.close-bookings');
+});
 
 Route::middleware('guest')->group(function () {
     Route::get('/registro', [RegisteredUserController::class, 'create'])->name('register');

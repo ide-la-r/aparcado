@@ -1,0 +1,22 @@
+# El plan gratuito de Render duerme el servicio tras quince minutos sin tráfico,
+# y despertarlo tarda medio minuto. Esto lo mantiene despierto en horas en las
+# que alguien podría entrar, y lo deja dormir de noche: no tiene sentido gastar
+# horas de máquina para que nadie mire.
+
+name: Mantener despierto
+
+on:
+    schedule:
+        # Cada diez minutos, de 07:00 a 22:00 en España (06:00–21:00 UTC).
+        - cron: '*/10 6-21 * * *'
+    workflow_dispatch:
+
+jobs:
+    ping:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Ping
+              # Sin `-f`: un servicio que está arrancando devuelve 502 y eso no es
+              # un fallo del flujo, es exactamente lo que se quería provocar.
+              run: curl -sS --max-time 60 -o /dev/null -w '%{http_code}\n' "${{ secrets.APP_URL }}/up" || true
