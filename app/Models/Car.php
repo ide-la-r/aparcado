@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\BookingStatus;
+use App\Support\Money;
 use Database\Factories\CarFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
@@ -73,6 +74,22 @@ class Car extends Model
     public function coverPhoto(): ?CarPhoto
     {
         return $this->photos->first();
+    }
+
+    public function priceForHumans(): string
+    {
+        return Money::short($this->price_cents);
+    }
+
+    /**
+     * «Ronda · Málaga», pero sólo «Málaga» cuando la ciudad es la propia capital:
+     * «Málaga · Málaga» no le dice nada a nadie.
+     */
+    public function place(): string
+    {
+        $province = $this->province->name;
+
+        return $this->city === $province ? $province : "{$this->city} · {$province}";
     }
 
     /** Sólo lo que el catálogo puede enseñar. */
