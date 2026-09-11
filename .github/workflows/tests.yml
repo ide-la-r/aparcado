@@ -70,6 +70,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Hace falta para la caché entre ejecuciones: el controlador por defecto de
+      # Docker no sabe exportarla, y sin esto la construcción falla con «Cache
+      # export is not supported for the docker driver».
+      - name: Preparar buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Construir la imagen
         uses: docker/build-push-action@v6
         with:
