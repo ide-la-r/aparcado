@@ -39,3 +39,24 @@ jobs:
 
       - name: Pasar los tests
         run: php artisan test
+
+  # El JavaScript y el CSS no se versionan (`public/build` está en el .gitignore),
+  # así que el único sitio donde se comprueba que compilan es aquí. Sin este trabajo,
+  # una clase de Tailwind mal escrita o un import roto no se ven hasta el despliegue.
+  assets:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Preparar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Compilar
+        run: npm run build
