@@ -12,7 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Quien ya ha entrado y vuelve a pedir el formulario de entrada va a la
+        // portada. Sin esto Laravel lo manda a `/dashboard`, que aquí no existe.
+        $middleware->redirectUsersTo('/');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

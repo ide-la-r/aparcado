@@ -22,6 +22,12 @@
 }
 
 @layer base {
+    /* Sin esto, el icono del ojo tachado asoma un instante antes de que Alpine
+       arranque. */
+    [x-cloak] {
+        display: none !important;
+    }
+
     body {
         @apply bg-neutral-50 text-neutral-900 antialiased;
     }
