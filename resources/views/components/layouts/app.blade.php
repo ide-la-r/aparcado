@@ -29,9 +29,15 @@
                     <a href="{{ route('login') }}" class="btn btn-ghost">Entrar</a>
                     <a href="{{ route('register') }}" class="btn btn-primary">Crear cuenta</a>
                 @else
-                    <span class="hidden text-sm text-neutral-600 sm:inline">
-                        Hola, {{ auth()->user()->name }}
-                    </span>
+                    <a href="{{ route('profile.show') }}" class="btn btn-ghost">
+                        <span class="hidden sm:inline">Hola,&nbsp;</span>{{ auth()->user()->name }}
+
+                        {{-- Un punto para que no se le olvide: sin papeles no puede
+                             alquilar ni publicar, y es fácil dejarlo a medias. --}}
+                        @unless (auth()->user()->isVerified())
+                            <span class="h-1.5 w-1.5 rounded-full bg-amber-500" title="Te faltan los papeles"></span>
+                        @endunless
+                    </a>
 
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

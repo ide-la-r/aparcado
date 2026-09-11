@@ -22,6 +22,14 @@ use Illuminate\Support\Carbon;
  *
  * Guardando la fecha en seco, las comparaciones normales valen en las dos bases de
  * datos y siguen usando el índice, que es lo que `whereDate()` habría roto.
+ *
+ * Una arista de Eloquent que conviene saber: cuando a un atributo con cast propio
+ * se le asigna un **objeto**, Eloquent guarda ese objeto tal cual en su caché de
+ * casts (`setClassCastableAttribute`), así que leerlo en la misma petición devuelve
+ * lo que se le pasó sin pasar por `get()`. O sea: asignar un `DateTime` devuelve un
+ * `DateTime`, no un Carbon, y una llamada a `toDateString()` revienta. Por eso las
+ * fechas se asignan **como cadena** («2026-09-11»), que es además la forma en que
+ * llegan de un formulario.
  */
 class DateOnly implements CastsAttributes
 {

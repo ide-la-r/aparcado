@@ -163,7 +163,8 @@ class AuthTest extends TestCase
         $this->actingAs($user)
             ->get(route('home'))
             ->assertOk()
-            ->assertSee('Hola, Ismael')
+            ->assertSee('Ismael')
+            ->assertSee(route('profile.show'))
             ->assertSee('Salir')
             ->assertDontSee('Crear cuenta');
     }

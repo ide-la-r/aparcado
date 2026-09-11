@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
@@ -19,6 +20,11 @@ Route::middleware('guest')->group(function () {
     Route::post('/entrar', [AuthenticatedSessionController::class, 'store']);
 });
 
-Route::post('/salir', [AuthenticatedSessionController::class, 'destroy'])
-    ->middleware('auth')
-    ->name('logout');
+Route::middleware('auth')->group(function () {
+    Route::post('/salir', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+
+    Route::get('/perfil', [ProfileController::class, 'show'])->name('profile.show');
+    Route::patch('/perfil', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/perfil/papeles', [ProfileController::class, 'documents'])->name('profile.documents');
+    Route::put('/perfil/contrasena', [ProfileController::class, 'password'])->name('profile.password');
+});

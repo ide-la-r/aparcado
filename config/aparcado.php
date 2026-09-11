@@ -60,6 +60,22 @@ return [
     'min_age' => 18,
 
     /*
+     * Los ficheros que sube la gente.
+     *
+     * El DNI y el carné van al disco **privado**: son datos sensibles y no los pide
+     * ninguna pantalla, sólo quien verifica la cuenta. En el TFG vivían en una
+     * carpeta pública del servidor, así que con acertar el nombre del fichero
+     * cualquiera se descargaba el DNI de otro.
+     *
+     * La foto de perfil sí es para verse, así que va al disco público.
+     */
+    'uploads' => [
+        'avatar_disk' => 'public',
+        'documents_disk' => 'local',
+        'max_kilobytes' => 4096,
+    ],
+
+    /*
      * Cuántos días como máximo puede durar una reserva, y con cuánta antelación se
      * puede pedir. El TFG no ponía ningún tope y se podía reservar un coche cuatro
      * años.

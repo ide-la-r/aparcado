@@ -65,6 +65,21 @@ class User extends Authenticatable
         return $this->verified_at !== null;
     }
 
+    public function hasSentDocuments(): bool
+    {
+        return $this->document_photo_path !== null && $this->licence_photo_path !== null;
+    }
+
+    /** En qué punto está la verificación: sin papeles, esperando, o hecha. */
+    public function verificationState(): string
+    {
+        return match (true) {
+            $this->isVerified() => 'verified',
+            $this->hasSentDocuments() => 'pending',
+            default => 'missing',
+        };
+    }
+
     /**
      * El plan que tiene hoy, o null si no paga ninguno. Lee de la relación ya
      * cargada cuando la hay, para que un listado no haga una consulta por dueño.

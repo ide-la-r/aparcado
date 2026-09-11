@@ -28,7 +28,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'phone' => fake('es_ES')->numerify('6########'),
-            'birthdate' => fake()->dateTimeBetween('-60 years', '-21 years'),
+            'birthdate' => fake()->dateTimeBetween('-60 years', '-21 years')->format('Y-m-d'),
             'document_type' => 'DNI',
             'document_number' => fake()->unique()->numerify('########').fake()->randomLetter(),
             'verified_at' => now(),
