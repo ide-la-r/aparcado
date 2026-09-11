@@ -25,12 +25,32 @@
             </nav>
 
             <div class="ml-auto flex items-center gap-2 sm:ml-0">
-                <a href="{{ route('cars.index') }}" class="btn btn-primary">Buscar coche</a>
+                @guest
+                    <a href="{{ route('login') }}" class="btn btn-ghost">Entrar</a>
+                    <a href="{{ route('register') }}" class="btn btn-primary">Crear cuenta</a>
+                @else
+                    <span class="hidden text-sm text-neutral-600 sm:inline">
+                        Hola, {{ auth()->user()->name }}
+                    </span>
+
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-secondary">Salir</button>
+                    </form>
+                @endguest
             </div>
         </div>
     </header>
 
     <main class="flex-1">
+        @if (session('status'))
+            <div class="mx-auto max-w-6xl px-4 pt-6 sm:px-6">
+                <p class="rounded-xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800 ring-1 ring-emerald-200 ring-inset">
+                    {{ session('status') }}
+                </p>
+            </div>
+        @endif
+
         {{ $slot }}
     </main>
 

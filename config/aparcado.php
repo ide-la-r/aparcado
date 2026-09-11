@@ -54,6 +54,12 @@ return [
     'document_types' => ['DNI', 'NIE', 'Pasaporte'],
 
     /*
+     * Los años que hay que tener para abrir una cuenta. El TFG no comprobaba la
+     * edad en ningún sitio.
+     */
+    'min_age' => 18,
+
+    /*
      * Cuántos días como máximo puede durar una reserva, y con cuánta antelación se
      * puede pedir. El TFG no ponía ningún tope y se podía reservar un coche cuatro
      * años.
