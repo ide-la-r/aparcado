@@ -7,3 +7,4 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', HomeController::class)->name('home');
 
 Route::get('/coches', [CarController::class, 'index'])->name('cars.index');
+Route::get('/coches/{car}', [CarController::class, 'show'])->name('cars.show');
