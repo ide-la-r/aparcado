@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\DateOnly;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -26,7 +27,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'verified_at' => 'datetime',
-            'birthdate' => 'date',
+            'birthdate' => DateOnly::class,
             'active' => 'boolean',
             'password' => 'hashed',
         ];

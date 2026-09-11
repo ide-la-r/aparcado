@@ -43,6 +43,21 @@ class CarAvailabilityTest extends TestCase
         );
     }
 
+    public function test_a_booking_that_starts_on_the_last_day_of_the_search_also_takes_the_car(): void
+    {
+        $car = Car::factory()->create();
+
+        Booking::factory()->for($car)->between('2026-10-05', '2026-10-07')->create();
+
+        // El espejo del caso de arriba, y el que se escapaba: con las fechas
+        // guardadas como «2026-10-05 00:00:00», SQLite comparaba texto y
+        // «2026-10-05 00:00:00» <= «2026-10-05» salía falso, así que el coche
+        // parecía libre justo el día en que empezaba la reserva.
+        $this->assertFalse(
+            Car::query()->freeBetween('2026-10-01', '2026-10-05')->whereKey($car->id)->exists()
+        );
+    }
+
     public function test_a_booking_that_swallows_the_whole_search_also_takes_the_car(): void
     {
         $car = Car::factory()->create();

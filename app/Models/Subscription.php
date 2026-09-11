@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\DateOnly;
 use App\Enums\Plan;
 use Database\Factories\SubscriptionFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -21,8 +22,8 @@ class Subscription extends Model
     {
         return [
             'plan' => Plan::class,
-            'starts_on' => 'date',
-            'ends_on' => 'date',
+            'starts_on' => DateOnly::class,
+            'ends_on' => DateOnly::class,
             'cancelled_at' => 'datetime',
         ];
     }
