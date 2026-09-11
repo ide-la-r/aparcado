@@ -16,4 +16,18 @@ abstract class TestCase extends BaseTestCase
      * los tests, igual que en producción.
      */
     protected string $seeder = ReferenceDataSeeder::class;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        /*
+         * Los tests no dependen de que alguien haya compilado los assets. `@vite`
+         * revienta si no encuentra `public/build/manifest.json`, y ese directorio no
+         * se versiona: en el servidor de integración fallaban los seis tests de
+         * vistas con un error que no hablaba de vistas. Que el CSS y el JavaScript
+         * compilan lo comprueba su propio trabajo en la CI.
+         */
+        $this->withoutVite();
+    }
 }
