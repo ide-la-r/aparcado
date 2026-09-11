@@ -111,6 +111,23 @@ class DemoSeeder extends Seeder
                 'total_cents' => $coche->price_cents * 5,
             ]);
 
+        // Y otra sin pagar, en otro coche, para poder ver la pantalla de pago y la
+        // diferencia entre «pendiente» y «confirmada» sin tocar la base de datos.
+        $otro = Car::query()->where('owner_id', '!=', $inquilino->id)->latest('id')->firstOrFail();
+
+        Booking::factory()
+            ->for($otro)
+            ->for($inquilino, 'renter')
+            ->pending()
+            ->between(
+                Carbon::today()->addMonth()->toDateString(),
+                Carbon::today()->addMonth()->addDays(2)->toDateString(),
+            )
+            ->create([
+                'price_cents_per_day' => $otro->price_cents,
+                'total_cents' => $otro->price_cents * 3,
+            ]);
+
         $conversacion = Conversation::factory()->create([
             'car_id' => $coche->id,
             'owner_id' => $coche->owner_id,

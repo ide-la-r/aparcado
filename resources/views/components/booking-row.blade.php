@@ -40,7 +40,7 @@
         <a href="{{ route('cars.show', $car) }}" class="btn btn-ghost">Ver el coche</a>
 
         @if ($status === \App\Enums\BookingStatus::Pending && $side === 'renter')
-            <button type="button" class="btn btn-primary" disabled>Pagar</button>
+            <a href="{{ route('payments.show', $booking) }}" class="btn btn-primary">Pagar</a>
         @endif
 
         @if ($booking->isCancellable())

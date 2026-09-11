@@ -6,13 +6,21 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyCarController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 
 Route::get('/coches', [CarController::class, 'index'])->name('cars.index');
 Route::get('/coches/{car}', [CarController::class, 'show'])->name('cars.show');
+
+// El aviso de PayPal viene de fuera: sin sesión, sin usuario y sin token, así que
+// no puede vivir dentro del grupo `web` con CSRF. Su comprobación es la firma.
+Route::post('/pagos/paypal/aviso', [PaymentController::class, 'webhook'])
+    ->withoutMiddleware([VerifyCsrfToken::class])
+    ->name('payments.webhook');
 
 Route::middleware('guest')->group(function () {
     Route::get('/registro', [RegisteredUserController::class, 'create'])->name('register');
@@ -36,6 +44,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/mis-reservas', [BookingController::class, 'index'])->name('bookings.index');
     Route::get('/reservas-de-mis-coches', [BookingController::class, 'incoming'])->name('bookings.incoming');
     Route::patch('/reservas/{booking}/cancelar', [BookingController::class, 'cancel'])->name('bookings.cancel');
+
+    Route::get('/reservas/{booking}/pagar', [PaymentController::class, 'show'])->name('payments.show');
+    Route::post('/reservas/{booking}/orden', [PaymentController::class, 'createOrder'])->name('payments.order');
+    Route::post('/reservas/{booking}/cobrar', [PaymentController::class, 'capture'])->name('payments.capture');
 
     Route::middleware('identity')->group(function () {
         Route::get('/mis-coches/nuevo', [MyCarController::class, 'create'])->name('my-cars.create');

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Carbon;
 
 #[Fillable(['starts_on', 'ends_on', 'days', 'price_cents_per_day', 'total_cents', 'status'])]
@@ -40,6 +41,12 @@ class Booking extends Model
     public function renter(): BelongsTo
     {
         return $this->belongsTo(User::class, 'renter_id');
+    }
+
+    /** @return MorphMany<Payment, $this> */
+    public function payments(): MorphMany
+    {
+        return $this->morphMany(Payment::class, 'payable');
     }
 
     public function blocksDates(): bool

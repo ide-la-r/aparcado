@@ -28,6 +28,22 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    /*
+     * PayPal. Las credenciales sólo en el entorno; el modo decide contra qué
+     * servidor se habla, y por defecto es el de pruebas para que nadie cobre de
+     * verdad por descuido.
+     *
+     * Se saca una aplicación en developer.paypal.com > Apps & Credentials, con el
+     * conmutador en «Sandbox».
+     */
+    'paypal' => [
+        'mode' => env('PAYPAL_MODE', 'sandbox'),
+        'client_id' => env('PAYPAL_CLIENT_ID'),
+        'secret' => env('PAYPAL_SECRET'),
+        'webhook_id' => env('PAYPAL_WEBHOOK_ID'),
+        'currency' => env('PAYPAL_CURRENCY', 'EUR'),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\BookingStatus;
 use App\Models\Booking;
 use App\Models\User;
 
@@ -22,5 +23,15 @@ class BookingPolicy
     public function cancel(User $user, Booking $booking): bool
     {
         return $this->view($user, $booking);
+    }
+
+    /**
+     * Pagar lo hace quien alquila, y sólo mientras esté pendiente. El dueño no paga
+     * su propio coche, y una reserva cancelada no se resucita pagándola.
+     */
+    public function pay(User $user, Booking $booking): bool
+    {
+        return $user->id === $booking->renter_id
+            && in_array($booking->status, [BookingStatus::Pending, BookingStatus::Confirmed], true);
     }
 }

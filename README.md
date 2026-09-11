@@ -41,6 +41,25 @@ php artisan migrate --seed
 composer run dev
 ```
 
+## Los pagos
+
+La orden se crea y se captura **en el servidor**, con el importe que dice la base
+de datos, y queda registrada en la tabla `payments`. El navegador sólo recibe el
+identificador de la orden.
+
+Para que funcionen hay que poner en el entorno las credenciales de una aplicación
+de PayPal —developer.paypal.com, «Apps & Credentials», con el conmutador en
+«Sandbox»—:
+
+```
+PAYPAL_MODE=sandbox
+PAYPAL_CLIENT_ID=...
+PAYPAL_SECRET=...
+PAYPAL_WEBHOOK_ID=...
+```
+
+Sin ellas la pantalla de pago lo dice y no se rompe nada.
+
 ## Cómo está montado
 
 | Pieza | Dónde |
