@@ -6,4 +6,63 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* El azul de las señales de aparcamiento, que es de donde viene el nombre. */
+    --color-brand-50: #eef4ff;
+    --color-brand-100: #d9e5ff;
+    --color-brand-200: #bcd0ff;
+    --color-brand-300: #8eb0ff;
+    --color-brand-400: #5885fd;
+    --color-brand-500: #325ff8;
+    --color-brand-600: #1c3fed;
+    --color-brand-700: #152dda;
+    --color-brand-800: #1727b1;
+    --color-brand-900: #19278c;
+    --color-brand-950: #141a55;
+}
+
+@layer base {
+    body {
+        @apply bg-neutral-50 text-neutral-900 antialiased;
+    }
+
+    /* Que el ancla de una sección no quede debajo de la cabecera fija. */
+    :target {
+        scroll-margin-top: 6rem;
+    }
+}
+
+@utility btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold
+        transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600;
+}
+
+@utility btn-primary {
+    @apply bg-brand-600 text-white shadow-sm hover:bg-brand-700 active:bg-brand-800;
+}
+
+@utility btn-secondary {
+    @apply bg-white text-neutral-800 ring-1 ring-neutral-200 ring-inset hover:bg-neutral-50;
+}
+
+@utility btn-ghost {
+    @apply text-neutral-700 hover:bg-neutral-100;
+}
+
+@utility field {
+    @apply w-full rounded-xl border-0 bg-white px-3.5 py-2.5 text-sm text-neutral-900 shadow-sm
+        ring-1 ring-neutral-200 ring-inset placeholder:text-neutral-400
+        focus:ring-2 focus:ring-brand-600;
+}
+
+@utility label {
+    @apply mb-1.5 block text-sm font-medium text-neutral-700;
+}
+
+@utility card {
+    @apply rounded-2xl bg-white ring-1 ring-neutral-200/80;
+}
+
+@utility chip {
+    @apply inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-medium text-neutral-700;
 }
