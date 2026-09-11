@@ -6,7 +6,7 @@
 <form method="GET"
       action="{{ route('cars.index') }}"
       x-data="{ from: @js($filters['from'] ?? '') }"
-      class="card grid gap-4 p-4 sm:grid-cols-[1.4fr_1fr_1fr_auto] sm:items-end sm:p-5">
+      class="card grid gap-4 p-4 shadow-xl shadow-neutral-950/10 sm:grid-cols-[1.4fr_1fr_1fr_auto] sm:items-end sm:p-5">
     <div>
         <label class="label" for="province">Provincia</label>
         <select id="province" name="province" class="field">

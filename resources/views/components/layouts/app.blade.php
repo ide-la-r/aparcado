@@ -86,30 +86,35 @@
         {{ $slot }}
     </main>
 
-    <footer class="mt-16 border-t border-neutral-200 bg-white">
-        <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-            <div class="flex flex-col gap-8 sm:flex-row sm:justify-between">
+    <footer class="relative mt-20 overflow-hidden bg-ink ink-glow text-white">
+        <div class="relative mx-auto max-w-6xl px-4 py-14 sm:px-6">
+            <div class="flex flex-col gap-10 sm:flex-row sm:justify-between">
                 <div class="max-w-xs">
                     <div class="flex items-center gap-2.5">
-                        <x-logo class="h-8 w-8 text-sm" />
-                        <span class="font-bold">Aparcado</span>
+                        <x-logo class="h-9 w-9" />
+                        <span class="text-lg font-bold">Aparcado</span>
                     </div>
-                    <p class="mt-3 text-sm text-neutral-600">
+                    <p class="mt-4 text-sm text-white/60">
                         Alquiler de coches entre particulares. El coche que está parado en la
                         puerta de tu vecino.
                     </p>
                 </div>
 
                 <nav class="text-sm">
-                    <p class="font-semibold text-neutral-900">Aparcado</p>
-                    <ul class="mt-3 space-y-2 text-neutral-600">
-                        <li><a class="hover:text-neutral-900" href="{{ route('cars.index') }}">Coches</a></li>
-                        <li><a class="hover:text-neutral-900" href="{{ route('home') }}#como-funciona">Cómo funciona</a></li>
+                    <p class="text-xs font-semibold tracking-wide text-white/40 uppercase">La web</p>
+                    <ul class="mt-3 space-y-2 text-white/70">
+                        <li><a class="hover:text-white" href="{{ route('cars.index') }}">Coches</a></li>
+                        <li><a class="hover:text-white" href="{{ route('home') }}#como-funciona">Cómo funciona</a></li>
+                        @guest
+                            <li><a class="hover:text-white" href="{{ route('register') }}">Crear cuenta</a></li>
+                        @else
+                            <li><a class="hover:text-white" href="{{ route('my-cars.index') }}">Mis coches</a></li>
+                        @endguest
                     </ul>
                 </nav>
             </div>
 
-            <p class="mt-10 text-xs text-neutral-500">
+            <p class="mt-12 border-t border-white/10 pt-6 text-xs text-white/40">
                 Proyecto personal, sin ánimo de lucro. La idea viene de SocialiCar, un trabajo
                 de fin de grado hecho en equipo.
             </p>

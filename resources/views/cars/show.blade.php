@@ -12,7 +12,11 @@
                 @if ($car->photos->count() > 1)
                     <div class="mt-2 grid grid-cols-4 gap-2">
                         @foreach ($car->photos->skip(1)->take(4) as $photo)
-                            <div class="aspect-[4/3] overflow-hidden rounded-xl bg-brand-50"></div>
+                            <div class="aspect-[4/3] overflow-hidden rounded-xl bg-gradient-to-br from-brand-100 via-brand-50 to-accent-50 ring-1 ring-neutral-900/5">
+                                <img src="{{ Storage::url($photo->path) }}" alt=""
+                                     loading="lazy" class="h-full w-full object-cover"
+                                     onerror="this.hidden = true">
+                            </div>
                         @endforeach
                     </div>
                 @endif

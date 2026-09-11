@@ -19,6 +19,26 @@
     --color-brand-800: #1727b1;
     --color-brand-900: #19278c;
     --color-brand-950: #141a55;
+
+    /*
+     * Un ámbar para lo que tiene que llamar: el precio, el plan de pago, el dato
+     * que no se puede pasar por alto. Con un solo color todo pesa lo mismo y la
+     * página se acaba leyendo como un formulario.
+     */
+    --color-accent-50: #fff8eb;
+    --color-accent-100: #ffeec6;
+    --color-accent-200: #ffdb88;
+    --color-accent-300: #ffc14a;
+    --color-accent-400: #ffa920;
+    --color-accent-500: #f98807;
+    --color-accent-600: #dd6302;
+    --color-accent-700: #b74306;
+    --color-accent-800: #94330c;
+    --color-accent-900: #7a2a0d;
+
+    /* El azul casi negro de las secciones de contraste. */
+    --color-ink: #0a0f1f;
+    --color-ink-soft: #131a30;
 }
 
 @layer base {
@@ -36,23 +56,37 @@
     :target {
         scroll-margin-top: 6rem;
     }
+
+    /* Un rastro de color al seleccionar texto: cuesta nada y se nota. */
+    ::selection {
+        @apply bg-brand-200 text-brand-950;
+    }
 }
 
 @utility btn {
     @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold
-        transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600;
+        transition duration-150 focus-visible:outline-2 focus-visible:outline-offset-2
+        focus-visible:outline-brand-600;
 }
 
 @utility btn-primary {
-    @apply bg-brand-600 text-white shadow-sm hover:bg-brand-700 active:bg-brand-800;
+    /* Con degradado y sombra del color del botón: uno plano no invita a pulsarlo. */
+    @apply bg-gradient-to-b from-brand-500 to-brand-700 text-white shadow-lg shadow-brand-600/25
+        hover:from-brand-400 hover:to-brand-600 hover:shadow-brand-600/35 active:to-brand-800;
 }
 
 @utility btn-secondary {
-    @apply bg-white text-neutral-800 ring-1 ring-neutral-200 ring-inset hover:bg-neutral-50;
+    @apply bg-white text-neutral-800 shadow-sm ring-1 ring-neutral-200 ring-inset
+        hover:bg-neutral-50 hover:ring-neutral-300;
 }
 
 @utility btn-ghost {
-    @apply text-neutral-700 hover:bg-neutral-100;
+    @apply text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900;
+}
+
+/* Para los botones que van sobre una sección oscura. */
+@utility btn-on-dark {
+    @apply bg-white/10 text-white ring-1 ring-white/20 ring-inset backdrop-blur hover:bg-white/20;
 }
 
 @utility field {
@@ -62,13 +96,33 @@
 }
 
 @utility label {
-    @apply mb-1.5 block text-sm font-medium text-neutral-700;
+    @apply mb-1.5 block text-xs font-semibold tracking-wide text-neutral-500 uppercase;
 }
 
 @utility card {
-    @apply rounded-2xl bg-white ring-1 ring-neutral-200/80;
+    @apply rounded-2xl bg-white shadow-sm shadow-neutral-900/5 ring-1 ring-neutral-900/5;
+}
+
+/* Para lo que se navega: la tarjeta se levanta un poco al pasar por encima. */
+@utility card-hover {
+    @apply transition duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-neutral-900/10
+        hover:ring-brand-200;
 }
 
 @utility chip {
     @apply inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-medium text-neutral-700;
+}
+
+@utility chip-accent {
+    @apply bg-accent-100 text-accent-900;
+}
+
+/*
+ * Un resplandor detrás de las secciones oscuras, para que no sean un rectángulo
+ * negro: azul arriba a la izquierda y un toque de ámbar a la derecha.
+ */
+@utility ink-glow {
+    background-image:
+        radial-gradient(60rem 32rem at 12% -15%, color-mix(in oklab, var(--color-brand-500) 42%, transparent), transparent 70%),
+        radial-gradient(42rem 26rem at 96% 8%, color-mix(in oklab, var(--color-accent-500) 20%, transparent), transparent 70%);
 }
