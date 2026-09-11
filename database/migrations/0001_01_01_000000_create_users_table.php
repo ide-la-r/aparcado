@@ -6,17 +6,33 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('surname');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('phone', 20)->nullable();
+            $table->date('birthdate')->nullable();
+
+            // Documento de identidad. El TFG guardaba la identificación como clave
+            // primaria de la tabla; aquí es un dato más, único pero prescindible:
+            // se puede registrar antes de subir los papeles.
+            $table->string('document_type', 20)->nullable();
+            $table->string('document_number', 30)->nullable()->unique();
+
+            $table->string('avatar_path')->nullable();
+            $table->string('document_photo_path')->nullable();
+            $table->string('licence_photo_path')->nullable();
+
+            // Verificado = alguien ha comprobado los papeles. Hasta entonces se puede
+            // entrar y mirar, pero no alquilar ni publicar.
+            $table->timestamp('verified_at')->nullable();
+            $table->boolean('active')->default(true);
+
             $table->rememberToken();
             $table->timestamps();
         });
@@ -37,9 +53,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('users');
