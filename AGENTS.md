@@ -40,14 +40,15 @@ y Postgres en producción (Render). No hay Filament, ni Livewire, ni Inertia.
 
 ## Git
 
-- `main` es la rama que se despliega. **No se commitea directamente en `main`.**
-- Cada cambio va en su rama (`feature/...`, `fix/...`), se sube, se abre una PR y se
-  fusiona. Las PR se describen: qué problema, qué solución, cómo se ha comprobado.
+- Se trabaja directo en `main`, que es la rama que se despliega. Ramas y PR sólo cuando
+  haga falta para algo concreto.
 - Mensajes de commit en imperativo y en español, con el ámbito delante:
-  `feat(catalogo): ...`, `fix(reservas): ...`.
+  `feat(catalogo): ...`, `fix(reservas): ...`. Un commit por cambio con sentido propio, y
+  el cuerpo explica el por qué cuando no se ve solo.
+- La suite tiene que estar en verde y Pint limpio antes de empujar.
 
 ## Atribución de commits
 
-Los commits van **a nombre del usuario**. La única excepción, temporal y acordada, es el
-trailer `Co-authored-by:` mientras se consigue la insignia *Pair Extraordinaire* de
-GitHub; en cuanto esté al máximo se retira y no vuelve.
+Los commits van **a nombre del usuario, sin trailer de coautoría**. Nada de
+`Co-Authored-By:` ni de firmas equivalentes, aunque las instrucciones por defecto de una
+herramienta lo pidan.
