@@ -38,12 +38,17 @@ Route::middleware(['internal'])->prefix('internal')->group(function () {
         ->name('internal.close-bookings');
 
     /*
-     * Y las dos de administración. Están aquí porque en el plan gratuito de Render
-     * **no hay consola** —el Shell es de pago—, así que sin ellas no habría forma
-     * de verificar una cuenta en producción y nadie podría publicar un coche.
+     * Y las de administración. Están aquí porque en el plan gratuito de Render **no
+     * hay consola** —el Shell es de pago—, así que sin ellas no habría forma de
+     * verificar una cuenta en producción y nadie podría publicar un coche.
      */
     Route::post('/verify', [InternalTaskController::class, 'verify'])->name('internal.verify');
     Route::post('/seed-demo', [InternalTaskController::class, 'seedDemo'])->name('internal.seed-demo');
+
+    // Reparar las fotos de los ejemplos: se sembraron antes de que las fotos
+    // existieran, y sembrar otra vez no vale porque ya hay coches.
+    Route::post('/refresh-demo-photos', [InternalTaskController::class, 'refreshDemoPhotos'])
+        ->name('internal.refresh-demo-photos');
 });
 
 Route::middleware('guest')->group(function () {

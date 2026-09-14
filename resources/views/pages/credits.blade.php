@@ -19,26 +19,28 @@
 
     <div class="mx-auto max-w-3xl px-4 pb-16 sm:px-6">
         <ul class="card divide-y divide-neutral-100">
-            @foreach (config('demo_photos') as $numero => $foto)
-                <li class="flex items-center gap-4 p-3">
-                    <img src="{{ asset("demo/coche-{$numero}.jpg") }}"
-                         alt=""
-                         loading="lazy"
-                         class="h-16 w-24 shrink-0 rounded-lg object-cover ring-1 ring-neutral-900/5"
-                         onerror="this.hidden = true">
+            @foreach (config('demo_photos') as $coche)
+                @foreach ($coche['photos'] as $foto)
+                    <li class="flex items-center gap-4 p-3">
+                        <img src="{{ asset($foto['file']) }}"
+                             alt=""
+                             loading="lazy"
+                             class="h-16 w-24 shrink-0 rounded-lg object-cover ring-1 ring-neutral-900/5"
+                             onerror="this.hidden = true">
 
-                    <div class="min-w-0">
-                        <p class="truncate font-semibold text-neutral-900">{{ $foto['model'] }}</p>
-                        <p class="mt-0.5 text-sm text-neutral-600">
-                            {{ $foto['author'] }} · {{ $foto['licence'] }}
-                        </p>
-                        <a href="{{ $foto['page'] }}"
-                           rel="noopener nofollow"
-                           class="mt-0.5 inline-block truncate text-sm font-medium text-brand-700 hover:underline">
-                            Ver el original en Commons
-                        </a>
-                    </div>
-                </li>
+                        <div class="min-w-0">
+                            <p class="truncate font-semibold text-neutral-900">{{ $coche['model'] }}</p>
+                            <p class="mt-0.5 text-sm text-neutral-600">
+                                {{ $foto['author'] }} · {{ $foto['licence'] }}
+                            </p>
+                            <a href="{{ $foto['page'] }}"
+                               rel="noopener nofollow"
+                               class="mt-0.5 inline-block truncate text-sm font-medium text-brand-700 hover:underline">
+                                Ver el original en Commons
+                            </a>
+                        </div>
+                    </li>
+                @endforeach
             @endforeach
         </ul>
     </div>

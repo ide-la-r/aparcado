@@ -6,6 +6,8 @@ use App\Enums\BookingStatus;
 use App\Models\Booking;
 use App\Models\Car;
 use App\Models\User;
+use App\Support\DemoPhotos;
+use Database\Seeders\DemoSeeder;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
@@ -49,7 +51,7 @@ class InternalTasksTest extends TestCase
 
     public function test_the_admin_routes_are_behind_the_same_door(): void
     {
-        foreach (['internal.verify', 'internal.seed-demo'] as $route) {
+        foreach (['internal.verify', 'internal.seed-demo', 'internal.refresh-demo-photos'] as $route) {
             $this->postJson(route($route), ['email' => 'yo@aparcado.test'])->assertNotFound();
         }
     }
@@ -95,6 +97,54 @@ class InternalTasksTest extends TestCase
         ])->assertStatus(409);
 
         $this->assertSame(1, Car::query()->count());
+    }
+
+    /**
+     * El caso de verdad: en producción los ejemplos se sembraron cuando las fotos
+     * todavía no existían, y quedaron apuntando a ficheros que no están. Volver a
+     * sembrar no vale, porque ya hay coches.
+     */
+    public function test_it_repairs_the_demo_photos_that_point_nowhere(): void
+    {
+        $this->seed(DemoSeeder::class);
+
+        $car = Car::query()->where('plate', '8820 XYZ')->firstOrFail();
+
+        // Como quedaron allí: una ruta con el id dentro, de un fichero que no existe.
+        $car->photos()->delete();
+        $car->photos()->create(['path' => "demo/coche-{$car->id}-1.jpg", 'position' => 0]);
+
+        $this->postJson(route('internal.refresh-demo-photos'), [], [
+            'Authorization' => 'Bearer el-token-bueno',
+        ])->assertOk()->assertJson(['ok' => true, 'coches' => 12]);
+
+        $paths = $car->refresh()->photos->pluck('path');
+
+        $this->assertSame(DemoPhotos::forPlate('8820 XYZ'), $paths->all());
+
+        foreach ($paths as $path) {
+            $this->assertFileExists(public_path($path));
+        }
+    }
+
+    public function test_repairing_the_photos_leaves_alone_what_people_uploaded(): void
+    {
+        $this->seed(DemoSeeder::class);
+
+        $car = Car::query()->where('plate', '8820 XYZ')->firstOrFail();
+        $car->photos()->create(['path' => 'cars/8820/la-mia.jpg', 'position' => 9]);
+
+        // Un coche que no es de ejemplo: la matrícula no está en la lista, así que
+        // esto no tiene por qué mirarlo siquiera.
+        $mine = Car::factory()->create(['plate' => '0001 AAA']);
+        $mine->photos()->create(['path' => 'cars/1/frente.jpg', 'position' => 0]);
+
+        $this->postJson(route('internal.refresh-demo-photos'), [], [
+            'Authorization' => 'Bearer el-token-bueno',
+        ])->assertOk();
+
+        $this->assertContains('cars/8820/la-mia.jpg', $car->refresh()->photos->pluck('path'));
+        $this->assertSame(['cars/1/frente.jpg'], $mine->refresh()->photos->pluck('path')->all());
     }
 
     public function test_with_the_right_token_it_closes_what_already_happened(): void

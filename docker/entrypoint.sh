@@ -36,6 +36,15 @@ php artisan db:seed --class='Database\Seeders\ReferenceDataSeeder' --force || {
     exit 1
 }
 
+# Las fotos de los coches de ejemplo van dentro del repositorio, así que lo que
+# manda es `config/demo_photos.php` y la base de datos se pone al día sola en cada
+# arranque: es una reconciliación, no un apaño de una vez. Hizo falta porque los
+# ejemplos se sembraron en producción cuando las fotos aún no existían.
+#
+# Aquí NO se corta el arranque si falla: sin provincias la web no funciona, pero
+# con una foto de menos sí.
+php artisan aparcado:refresh-demo-photos || echo "⚠ No se han podido reponer las fotos de ejemplo"
+
 echo "→ Servidor escuchando en ${SERVER_NAME}"
 
 exec frankenphp run --config /etc/caddy/Caddyfile

@@ -10,7 +10,6 @@ use App\Models\Province;
 use App\Models\User;
 use Database\Seeders\DemoSeeder;
 use Database\Seeders\ReferenceDataSeeder;
-use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class SeedersTest extends TestCase
@@ -77,36 +76,44 @@ class SeedersTest extends TestCase
     {
         $this->seed(DemoSeeder::class);
 
+        $known = array_column(config('demo_photos'), 'plate');
+
         foreach (Car::query()->with(['photos', 'features'])->get() as $car) {
-            $this->assertCount(1, $car->photos, "El coche {$car->id} no tiene foto.");
-
-            $path = $car->photos->first()->path;
-
-            $this->assertFileExists(
-                public_path($path),
-                "La foto {$path} del coche {$car->id} no está en el repositorio.",
+            $this->assertContains(
+                $car->plate,
+                $known,
+                "El coche {$car->plate} no está en config/demo_photos.php, así que se sembró sin fotos.",
             );
 
-            $number = (int) Str::between($path, 'demo/coche-', '.jpg');
+            $this->assertNotEmpty($car->photos, "El coche {$car->plate} no tiene foto.");
 
-            $this->assertArrayHasKey(
-                $number,
-                config('demo_photos'),
-                "La foto {$path} no tiene crédito en config/demo_photos.php.",
-            );
+            foreach ($car->photos as $photo) {
+                $this->assertFileExists(
+                    public_path($photo->path),
+                    "La foto {$photo->path} del coche {$car->plate} no está en el repositorio.",
+                );
+            }
 
-            $this->assertGreaterThanOrEqual(4, $car->features->count(), "El coche {$car->id} no tiene extras.");
+            $this->assertGreaterThanOrEqual(4, $car->features->count(), "El coche {$car->plate} no tiene extras.");
         }
     }
 
     /** Y al revés: un crédito que ya no apunta a ninguna foto sobra y despista. */
     public function test_no_credit_points_at_a_missing_photo(): void
     {
-        foreach (config('demo_photos') as $number => $photo) {
-            $this->assertFileExists(public_path("demo/coche-{$number}.jpg"));
+        foreach (config('demo_photos') as $number => $car) {
+            $this->assertNotEmpty($car['plate'] ?? null, "A la entrada {$number} le falta la matrícula.");
+            $this->assertNotEmpty($car['photos'] ?? null, "La entrada {$number} no tiene ninguna foto.");
 
-            foreach (['model', 'author', 'licence', 'page'] as $field) {
-                $this->assertNotEmpty($photo[$field] ?? null, "A la foto {$number} le falta «{$field}».");
+            foreach ($car['photos'] as $photo) {
+                $this->assertFileExists(public_path($photo['file']));
+
+                foreach (['author', 'licence', 'page'] as $field) {
+                    $this->assertNotEmpty(
+                        $photo[$field] ?? null,
+                        "A la foto {$photo['file']} le falta «{$field}».",
+                    );
+                }
             }
         }
     }

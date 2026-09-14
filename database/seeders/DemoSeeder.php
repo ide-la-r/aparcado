@@ -10,6 +10,7 @@ use App\Models\Conversation;
 use App\Models\Feature;
 use App\Models\Message;
 use App\Models\User;
+use App\Support\DemoPhotos;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -120,15 +121,15 @@ class DemoSeeder extends Seeder
             // de ejemplo que cambian en cada siembra no sirven para comparar nada.
             $car->features()->sync(array_slice($features, $index % 6, 5));
 
-            // Una foto de verdad del modelo, no un hueco con una silueta dentro.
-            // Un catálogo de coches sin fotos no hay forma de enseñárselo a nadie,
-            // y por bonito que se pinte el hueco sigue siendo un hueco. Salen de
-            // Wikimedia Commons; quién hizo cada una está en `config/demo_photos`
-            // y es lo que pinta la página de créditos.
-            $car->photos()->create([
-                'path' => 'demo/coche-'.($index + 1).'.jpg',
-                'position' => 0,
-            ]);
+            // Fotos de verdad del modelo, no un hueco con una silueta dentro. Un
+            // catálogo de coches sin fotos no hay forma de enseñárselo a nadie, y
+            // por bonito que se pinte el hueco sigue siendo un hueco. Salen de
+            // Wikimedia Commons; el reparto y los créditos están en
+            // `config/demo_photos`, atados a la matrícula y no al orden de esta
+            // lista, para que valgan también reparando lo ya sembrado.
+            foreach (DemoPhotos::forPlate($plate) as $position => $path) {
+                $car->photos()->create(['path' => $path, 'position' => $position]);
+            }
 
             $cars[] = $car;
         }

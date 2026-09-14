@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
+use App\Models\CarPhoto;
 use App\Models\User;
+use App\Support\DemoPhotos;
 use Database\Seeders\DemoSeeder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -75,6 +77,25 @@ class InternalTaskController extends Controller
             'ok' => true,
             'usuarios' => User::query()->count(),
             'coches' => Car::query()->count(),
+        ]);
+    }
+
+    /**
+     * Vuelve a dejar cada coche de ejemplo con sus fotos.
+     *
+     * Los datos de ejemplo se sembraron en producción cuando las fotos todavía no
+     * existían, así que quedaron apuntando a ficheros que no están y el catálogo
+     * entero se veía con el hueco de relleno. Sembrar otra vez no sirve —`seedDemo`
+     * se niega en cuanto hay coches, y hace bien—, de ahí esta puerta aparte: sólo
+     * toca las fotos de los coches que reconoce por su matrícula, y se puede
+     * llamar las veces que haga falta.
+     */
+    public function refreshDemoPhotos(): JsonResponse
+    {
+        return response()->json([
+            'ok' => true,
+            'coches' => DemoPhotos::refresh(),
+            'fotos' => CarPhoto::query()->where('path', 'like', 'demo/%')->count(),
         ]);
     }
 }

@@ -31,10 +31,12 @@ class PagesTest extends TestCase
     {
         $response = $this->get(route('pages.credits'))->assertOk();
 
-        foreach (config('demo_photos') as $photo) {
-            $response->assertSee($photo['author'], escape: false)
-                ->assertSee($photo['licence'])
-                ->assertSee($photo['page'], escape: false);
+        foreach (config('demo_photos') as $car) {
+            foreach ($car['photos'] as $photo) {
+                $response->assertSee($photo['author'], escape: false)
+                    ->assertSee($photo['licence'])
+                    ->assertSee($photo['page'], escape: false);
+            }
         }
     }
 
