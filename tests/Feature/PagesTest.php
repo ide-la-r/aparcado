@@ -17,7 +17,25 @@ class PagesTest extends TestCase
             'aviso legal' => ['pages.legal', 'Aviso legal'],
             'privacidad' => ['pages.privacy', 'Los papeles no se publican'],
             'cookies' => ['pages.cookies', 'No hay banner, y es a propósito'],
+            'créditos' => ['pages.credits', 'Créditos de las fotos'],
         ];
+    }
+
+    /**
+     * Las fotos de ejemplo salen de Wikimedia y casi todas son CC BY-SA, que obliga
+     * a citar a quien las hizo. Si esta página se queda sin nombrar a alguno, el
+     * incumplimiento no se ve por ningún lado: no falla nada, simplemente falta el
+     * crédito.
+     */
+    public function test_the_credits_page_names_every_author(): void
+    {
+        $response = $this->get(route('pages.credits'))->assertOk();
+
+        foreach (config('demo_photos') as $photo) {
+            $response->assertSee($photo['author'], escape: false)
+                ->assertSee($photo['licence'])
+                ->assertSee($photo['page'], escape: false);
+        }
     }
 
     #[DataProvider('pages')]

@@ -120,12 +120,15 @@ class DemoSeeder extends Seeder
             // de ejemplo que cambian en cada siembra no sirven para comparar nada.
             $car->features()->sync(array_slice($features, $index % 6, 5));
 
-            foreach (range(1, 3) as $position) {
-                $car->photos()->create([
-                    'path' => "demo/coche-{$car->id}-{$position}.jpg",
-                    'position' => $position - 1,
-                ]);
-            }
+            // Una foto de verdad del modelo, no un hueco con una silueta dentro.
+            // Un catálogo de coches sin fotos no hay forma de enseñárselo a nadie,
+            // y por bonito que se pinte el hueco sigue siendo un hueco. Salen de
+            // Wikimedia Commons; quién hizo cada una está en `config/demo_photos`
+            // y es lo que pinta la página de créditos.
+            $car->photos()->create([
+                'path' => 'demo/coche-'.($index + 1).'.jpg',
+                'position' => 0,
+            ]);
 
             $cars[] = $car;
         }

@@ -24,6 +24,7 @@ Route::view('/contacto', 'pages.contact')->name('pages.contact');
 Route::view('/aviso-legal', 'pages.legal')->name('pages.legal');
 Route::view('/privacidad', 'pages.privacy')->name('pages.privacy');
 Route::view('/cookies', 'pages.cookies')->name('pages.cookies');
+Route::view('/creditos', 'pages.credits')->name('pages.credits');
 
 // El aviso de PayPal viene de fuera: sin sesión, sin usuario y sin token, así que
 // no puede pasar por la comprobación de CSRF. Lo que lo protege es su firma.

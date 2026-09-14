@@ -129,6 +129,7 @@
                             <li><a class="hover:text-white" href="{{ route('pages.privacy') }}">Privacidad</a></li>
                             <li><a class="hover:text-white" href="{{ route('pages.cookies') }}">Cookies</a></li>
                             <li><a class="hover:text-white" href="{{ route('pages.legal') }}">Aviso legal</a></li>
+                            <li><a class="hover:text-white" href="{{ route('pages.credits') }}">Créditos de las fotos</a></li>
                             <li><a class="hover:text-white" href="{{ route('pages.contact') }}">Contacto</a></li>
                         </ul>
                     </nav>

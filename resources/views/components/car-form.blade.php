@@ -211,7 +211,7 @@
                 @foreach ($car->photos as $index => $photo)
                     <div class="space-y-1.5">
                         <div class="aspect-[4/3] overflow-hidden rounded-xl bg-brand-50">
-                            <img src="{{ Storage::url($photo->path) }}" alt="" class="h-full w-full object-cover"
+                            <img src="{{ $photo->url() }}" alt="" class="h-full w-full object-cover"
                                  onerror="this.hidden = true">
                         </div>
 

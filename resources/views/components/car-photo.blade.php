@@ -16,7 +16,7 @@
     <span class="relative z-10 mt-[18%] px-4 text-center text-sm font-semibold text-brand-800/70">{{ $car->title() }}</span>
 
     @if ($photo = $car->coverPhoto())
-        <img src="{{ Storage::url($photo->path) }}"
+        <img src="{{ $photo->url() }}"
              alt="{{ $car->title() }}"
              loading="lazy"
              class="absolute inset-0 z-20 h-full w-full object-cover"

@@ -10,6 +10,7 @@ use App\Models\Province;
 use App\Models\User;
 use Database\Seeders\DemoSeeder;
 use Database\Seeders\ReferenceDataSeeder;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class SeedersTest extends TestCase
@@ -64,13 +65,49 @@ class SeedersTest extends TestCase
         );
     }
 
-    public function test_every_demo_car_has_photos_and_extras(): void
+    /**
+     * Las fotos de ejemplo son ficheros de verdad que van en el repositorio, así
+     * que aquí se comprueban las tres cosas que pueden romperse por separado: que
+     * el coche tenga su foto, que el fichero exista donde dice, y que esté su
+     * crédito. Lo último no es un capricho: casi todas son CC BY-SA, y esa licencia
+     * **obliga** a citar a quien las hizo. Una foto sin crédito es un problema de
+     * licencia, no un detalle de diseño.
+     */
+    public function test_every_demo_car_has_a_real_photo_with_credits_and_extras(): void
     {
         $this->seed(DemoSeeder::class);
 
         foreach (Car::query()->with(['photos', 'features'])->get() as $car) {
-            $this->assertCount(3, $car->photos, "El coche {$car->id} no tiene fotos.");
+            $this->assertCount(1, $car->photos, "El coche {$car->id} no tiene foto.");
+
+            $path = $car->photos->first()->path;
+
+            $this->assertFileExists(
+                public_path($path),
+                "La foto {$path} del coche {$car->id} no está en el repositorio.",
+            );
+
+            $number = (int) Str::between($path, 'demo/coche-', '.jpg');
+
+            $this->assertArrayHasKey(
+                $number,
+                config('demo_photos'),
+                "La foto {$path} no tiene crédito en config/demo_photos.php.",
+            );
+
             $this->assertGreaterThanOrEqual(4, $car->features->count(), "El coche {$car->id} no tiene extras.");
+        }
+    }
+
+    /** Y al revés: un crédito que ya no apunta a ninguna foto sobra y despista. */
+    public function test_no_credit_points_at_a_missing_photo(): void
+    {
+        foreach (config('demo_photos') as $number => $photo) {
+            $this->assertFileExists(public_path("demo/coche-{$number}.jpg"));
+
+            foreach (['model', 'author', 'licence', 'page'] as $field) {
+                $this->assertNotEmpty($photo[$field] ?? null, "A la foto {$number} le falta «{$field}».");
+            }
         }
     }
 }
