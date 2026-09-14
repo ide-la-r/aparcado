@@ -1,30 +1,99 @@
 <x-layouts.app>
     <x-dark-section>
-        <div class="mx-auto max-w-6xl px-4 pt-16 pb-20 sm:px-6 sm:pt-24 sm:pb-28">
-            <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold tracking-wide text-white/90 ring-1 ring-white/15 ring-inset">
-                <span class="relative flex h-1.5 w-1.5">
-                    <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-75"></span>
-                    <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent-400"></span>
-                </span>
-                Alquiler entre particulares
-            </p>
+        <div class="mx-auto max-w-6xl px-4 pt-10 sm:px-6 sm:pt-20">
+            <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+                <div>
+                    <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold tracking-wide text-white/90 ring-1 ring-white/15 ring-inset">
+                        <span class="relative flex h-1.5 w-1.5">
+                            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-75"></span>
+                            <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent-400"></span>
+                        </span>
+                        Alquiler entre particulares
+                    </p>
 
-            <h1 class="mt-6 max-w-3xl text-5xl leading-[1.05] font-bold text-balance sm:text-7xl">
-                El coche que tienes parado en la puerta
-                <span class="bg-gradient-to-r from-accent-200 via-accent-400 to-accent-500 bg-clip-text text-transparent">
-                    puede estar trabajando</span>.
-            </h1>
+                    {{-- En el móvil el titular baja a 36 px: a 48 ocupaba la pantalla
+                         entera él solo y no quedaba sitio ni para una foto. --}}
+                    <h1 class="mt-6 text-4xl leading-[1.05] font-bold text-balance sm:text-6xl sm:leading-[1.03] xl:text-7xl">
+                        El coche que tienes parado en la puerta
+                        <span class="bg-gradient-to-r from-accent-200 via-accent-400 to-accent-500 bg-clip-text text-transparent">
+                            puede estar trabajando</span>.
+                    </h1>
 
-            <p class="mt-7 max-w-xl text-lg text-white/60">
-                Aparcado junta a quien tiene un coche quieto con quien lo necesita un par de
-                días. Sin oficinas, sin colas y hablando con el dueño desde el primer mensaje.
-            </p>
+                    <p class="mt-6 max-w-md text-white/60 sm:mt-7 sm:text-lg">
+                        Aparcado junta a quien tiene un coche quieto con quien lo necesita un par de
+                        días. Sin oficinas, sin colas y hablando con el dueño desde el primer mensaje.
+                    </p>
+                </div>
 
-            <div class="mt-10">
+                {{-- La ilustración de la portada es la aplicación misma: un anuncio
+                     de verdad, con su foto y su precio, y un trozo de chat encima.
+                     Enseñar lo que hay dice en un vistazo lo que un dibujo no dice en
+                     tres párrafos, y promete exactamente lo que se va a encontrar al
+                     entrar.
+
+                     Una sola ficha y no un montón: en cuanto se apilan dos, una tapa
+                     el nombre de la otra y lo que se lee es un lío. La variedad ya la
+                     cuenta la tira de abajo.
+
+                     Y es un enlace de verdad al coche, no un adorno: en el móvil es
+                     lo primero que se ve, y lo primero que se ve tiene que llevar a
+                     algún sitio. --}}
+                @if ($showcase)
+                    <div class="relative">
+                        {{-- El resplandor de detrás separa la ficha del fondo oscuro
+                             sin tener que ponerle un borde. --}}
+                        <div class="absolute -inset-10 -z-10 rounded-full bg-brand-500/25 blur-3xl"></div>
+
+                        <div class="animate-bob">
+                            {{-- El giro sólo en pantalla grande: en el móvil la ficha
+                                 ocupa todo el ancho y una torcida se sale por los
+                                 lados. --}}
+                            <a href="{{ route('cars.show', $showcase) }}"
+                               class="group relative block overflow-hidden rounded-3xl bg-white shadow-2xl shadow-brand-950/60 ring-1 ring-white/10 transition duration-300 lg:rotate-[-3deg] lg:hover:rotate-0">
+                                <x-car-photo :car="$showcase" class="aspect-[16/10] transition duration-700 group-hover:scale-[1.05] sm:aspect-[4/3]" />
+
+                                {{-- El rótulo va encima de la foto, no debajo: la ficha
+                                     se queda en una sola pieza y el coche ocupa todo. --}}
+                                <div class="photo-scrim z-30"></div>
+
+                                <div class="absolute inset-x-0 bottom-0 z-30 flex items-end justify-between gap-3 p-4 sm:p-5">
+                                    <div class="min-w-0">
+                                        <p class="truncate font-display text-lg font-bold text-white">
+                                            {{ $showcase->title() }}
+                                        </p>
+                                        <p class="mt-0.5 truncate text-sm text-white/70">{{ $showcase->place() }}</p>
+                                    </div>
+
+                                    <p class="price-tag shrink-0">
+                                        <span class="price text-base">{{ $showcase->priceForHumans() }}</span>
+                                        <span class="text-[0.7rem] font-medium text-neutral-500">/día</span>
+                                    </p>
+                                </div>
+                            </a>
+                        </div>
+
+                        {{-- Y el chat, que es lo que separa esto de una web de alquiler
+                             de toda la vida: aquí se habla con una persona. Es un
+                             ejemplo dibujado, así que no se lee en voz alta ni ocupa
+                             sitio en el móvil. --}}
+                        <div class="animate-bob-slow absolute -top-8 right-0 hidden w-56 lg:block xl:-right-8"
+                             aria-hidden="true">
+                            <p class="rounded-2xl rounded-br-sm bg-white px-3.5 py-2.5 text-sm text-neutral-700 shadow-xl shadow-brand-950/40">
+                                ¿Cabe la silla del niño?
+                            </p>
+                            <p class="mt-2 ml-8 rounded-2xl rounded-bl-sm bg-accent-400 px-3.5 py-2.5 text-sm font-medium text-accent-950 shadow-xl shadow-brand-950/40">
+                                Lleva Isofix, te la dejo puesta
+                            </p>
+                        </div>
+                    </div>
+                @endif
+            </div>
+
+            <div class="mt-12 sm:mt-14">
                 <x-car-search :provinces="$provinces" />
             </div>
 
-            <dl class="mt-12 grid max-w-2xl grid-cols-3 gap-6 border-t border-white/10 pt-8">
+            <dl class="mt-10 grid max-w-2xl grid-cols-3 gap-6 border-t border-white/10 pt-8">
                 @foreach ([
                     [$stats['cars'], 'coches publicados'],
                     [$stats['provinces'], 'provincias con coche'],
@@ -37,6 +106,29 @@
                 @endforeach
             </dl>
         </div>
+
+        {{-- La portada no termina en una raya: termina en una tira de coches que
+             cruza la pantalla muy despacio. Es lo que hace que se entienda de qué va
+             esto antes de leer una sola palabra. --}}
+        @if ($strip->count() >= 4)
+            <div class="marquee-mask mt-14 overflow-hidden pb-14" aria-hidden="true">
+                <div class="animate-marquee flex w-max gap-4">
+                    {{-- La lista va dos veces: por eso el desplazamiento del 50 % cae
+                         justo en el mismo sitio y el bucle no da tirón. --}}
+                    @foreach (range(1, 2) as $vuelta)
+                        @foreach ($strip as $car)
+                            <img src="{{ $car->coverPhoto()->url() }}"
+                                 alt=""
+                                 loading="lazy"
+                                 decoding="async"
+                                 class="h-28 w-44 shrink-0 rounded-xl object-cover opacity-70 ring-1 ring-white/10 sm:h-32 sm:w-52">
+                        @endforeach
+                    @endforeach
+                </div>
+            </div>
+        @else
+            <div class="pb-20"></div>
+        @endif
     </x-dark-section>
 
     @if ($latest->isNotEmpty())
@@ -50,9 +142,9 @@
                 <a href="{{ route('cars.index') }}" class="btn btn-secondary">Ver todos</a>
             </div>
 
-            <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($latest as $index => $car)
-                    <div data-reveal="{{ $index * 90 }}">
+                    <div data-reveal="{{ $index * 80 }}">
                         <x-car-card :car="$car" />
                     </div>
                 @endforeach

@@ -5,28 +5,55 @@
             ← Volver a los coches
         </a>
 
-        <div class="mt-4 grid gap-8 lg:grid-cols-[1.6fr_1fr]">
+        {{-- El nombre va delante de las fotos: así la pestaña del navegador, el
+             titular y lo primero que se lee dicen lo mismo, y quien llega de una
+             búsqueda sabe dónde ha caído sin esperar a que cargue una imagen. --}}
+        <header class="mt-4">
+            <h1 class="text-3xl font-bold text-balance sm:text-4xl">{{ $car->title() }}</h1>
+            <p class="mt-1.5 flex items-center gap-1.5 text-neutral-600">
+                <svg class="h-4 w-4 shrink-0 text-neutral-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z" />
+                </svg>
+                {{ $car->place() }}
+            </p>
+        </header>
+
+        {{-- El mosaico: la foto grande manda y las demás la acompañan a la derecha.
+             Con una sola foto no hay mosaico que valga, así que ocupa todo el ancho
+             en lugar de dejar medio hueco vacío al lado. --}}
+        @php $extra = $car->photos->skip(1)->take(2); @endphp
+
+        <div @class([
+            'mt-6 grid gap-2 overflow-hidden rounded-2xl',
+            'sm:grid-cols-[2fr_1fr]' => $extra->isNotEmpty(),
+        ])>
+            {{-- Con una sola foto se manda la altura a mano: un 16/9 a todo el ancho
+                 mide más de seiscientos píxeles y se come la pantalla entera antes
+                 de que se lea un solo dato del coche. --}}
+            <x-car-photo :car="$car" :class="$extra->isNotEmpty() ? 'aspect-[4/3] sm:aspect-auto sm:h-full sm:min-h-[22rem]' : 'h-64 sm:h-[24rem]'" />
+
+            @if ($extra->isNotEmpty())
+                <div class="grid gap-2 {{ $extra->count() > 1 ? 'grid-cols-2 sm:grid-cols-1' : '' }}">
+                    @foreach ($extra as $photo)
+                        <div class="aspect-[4/3] overflow-hidden bg-gradient-to-br from-brand-100 via-brand-50 to-accent-50 sm:aspect-auto sm:h-full">
+                            <img src="{{ $photo->url() }}" alt=""
+                                 loading="lazy" class="h-full w-full object-cover"
+                                 onerror="this.hidden = true">
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+
+        <div class="mt-8 grid gap-8 lg:grid-cols-[1.6fr_1fr]">
             <div>
-                <x-car-photo :car="$car" class="aspect-[16/10] rounded-2xl" />
-
-                @if ($car->photos->count() > 1)
-                    <div class="mt-2 grid grid-cols-4 gap-2">
-                        @foreach ($car->photos->skip(1)->take(4) as $photo)
-                            <div class="aspect-[4/3] overflow-hidden rounded-xl bg-gradient-to-br from-brand-100 via-brand-50 to-accent-50 ring-1 ring-neutral-900/5">
-                                <img src="{{ Storage::url($photo->path) }}" alt=""
-                                     loading="lazy" class="h-full w-full object-cover"
-                                     onerror="this.hidden = true">
-                            </div>
-                        @endforeach
-                    </div>
-                @endif
-
-                <header class="mt-6">
-                    <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">{{ $car->title() }}</h1>
-                    <p class="mt-1 text-neutral-600">{{ $car->place() }}</p>
-                </header>
-
-                <dl class="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
+                {{-- La ficha técnica, en una rejilla con sus rayas: nueve pares de
+                     dato y etiqueta sueltos en el blanco se leen como una lista de la
+                     compra. --}}
+                {{-- Las rayas son el hueco de un píxel entre celdas, con el fondo de
+                     la rejilla asomando: así salen solas en cualquier número de
+                     columnas y no hay que ir contando hijos por cada tamaño. --}}
+                <dl class="card grid grid-cols-2 gap-px overflow-hidden bg-neutral-100 sm:grid-cols-3">
                     @foreach ([
                         'Combustible' => $car->fuel,
                         'Cambio' => $car->transmission,
@@ -38,16 +65,16 @@
                         'Kilómetros' => number_format($car->kilometres, 0, ',', '.').' km',
                         'Color' => $car->colour,
                     ] as $term => $value)
-                        <div>
-                            <dt class="text-xs font-medium tracking-wide text-neutral-500 uppercase">{{ $term }}</dt>
-                            <dd class="mt-0.5 font-medium text-neutral-900">{{ $value }}</dd>
+                        <div class="bg-white px-4 py-3.5">
+                            <dt class="text-[0.7rem] font-semibold tracking-wide text-neutral-400 uppercase">{{ $term }}</dt>
+                            <dd class="mt-1 font-medium text-neutral-900">{{ $value }}</dd>
                         </div>
                     @endforeach
                 </dl>
 
                 @if ($car->description)
                     <div class="mt-8">
-                        <h2 class="font-semibold">Lo que cuenta el dueño</h2>
+                        <h2 class="text-lg font-semibold">Lo que cuenta el dueño</h2>
                         <p class="mt-2 whitespace-pre-line text-neutral-700">{{ $car->description }}</p>
                     </div>
                 @endif

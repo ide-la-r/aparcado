@@ -21,10 +21,14 @@ const reveal = () => {
 
     piezas.forEach((pieza) => pieza.classList.add('revealable'));
 
+    let avisoRecibido = false;
+
     const observador = new IntersectionObserver(
         (entradas) => {
             entradas.forEach((entrada) => {
                 if (! entrada.isIntersecting) return;
+
+                avisoRecibido = true;
 
                 // El retraso escalona los hermanos para que entren en cascada y no
                 // todos de golpe.
@@ -38,6 +42,23 @@ const reveal = () => {
     );
 
     piezas.forEach((pieza) => observador.observe(pieza));
+
+    /*
+     * Y una red debajo. Lo que espera a aparecer está a opacidad cero, así que si
+     * el observador no avisa nunca —un navegador que deja de pintar la pestaña, un
+     * entorno que limita el dibujado— media página se queda invisible para siempre
+     * y sin un solo error en ninguna parte. Pasó aquí mismo: de doce tarjetas se
+     * veía una.
+     *
+     * Salta sólo si NO ha avisado ni una vez. En cuanto el observador funciona esto
+     * no hace nada y la aparición escalonada se queda igual.
+     */
+    setTimeout(() => {
+        if (avisoRecibido) return;
+
+        observador.disconnect();
+        piezas.forEach((pieza) => pieza.classList.add('revealed'));
+    }, 2000);
 };
 
 document.addEventListener('DOMContentLoaded', reveal);

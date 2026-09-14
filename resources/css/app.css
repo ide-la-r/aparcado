@@ -45,12 +45,33 @@
 
     --animate-float: float 18s ease-in-out infinite;
     --animate-float-slow: float 26s ease-in-out infinite reverse;
+    --animate-marquee: marquee 60s linear infinite;
+    --animate-bob: bob 7s ease-in-out infinite;
+    --animate-bob-slow: bob 10s ease-in-out infinite;
+}
+
+/* Las fichas de la portada no están quietas del todo: flotan medio centímetro.
+   Va en un envoltorio aparte porque el giro lo lleva la ficha de dentro y aquí se
+   sobrescribiría. */
+@keyframes bob {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -0.55rem, 0); }
 }
 
 @keyframes float {
     0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
     33% { transform: translate3d(6%, -8%, 0) scale(1.12); }
     66% { transform: translate3d(-5%, 6%, 0) scale(0.94); }
+}
+
+/*
+ * La tira de fotos que cruza la portada. Se desplaza exactamente la mitad porque
+ * dentro va la lista de fotos **dos veces**: al llegar a la mitad, lo que se ve
+ * es el mismo sitio del que salió y el salto no existe.
+ */
+@keyframes marquee {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
 }
 
 @layer base {
@@ -236,6 +257,50 @@
 
 @utility chip {
     @apply inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-medium text-neutral-700;
+}
+
+/* ─── Fotos ────────────────────────────────────────────────────────────────── */
+
+/*
+ * El precio sobre la foto, no debajo. Es lo que primero busca quien mira un
+ * catálogo, y puesto encima se lee sin bajar la vista; el cristal esmerilado lo
+ * mantiene legible dé la foto lo que dé por detrás.
+ */
+@utility price-tag {
+    @apply inline-flex items-baseline gap-1 rounded-full bg-white/92 px-3 py-1.5 shadow-lg
+        shadow-neutral-950/25 ring-1 ring-white/60 ring-inset backdrop-blur-md;
+}
+
+/*
+ * La ficha técnica de una tarjeta, en una línea y sin cajas. Tres pastillas grises
+ * debajo de cada foto convierten una rejilla en un formulario: el dato es el mismo
+ * y pesa la mitad.
+ */
+@utility meta-line {
+    @apply flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs font-medium text-neutral-500;
+
+    & > * + *::before {
+        content: '·';
+        margin-right: 0.375rem;
+        color: var(--color-neutral-300);
+    }
+}
+
+/*
+ * Un degradado oscuro sólo en la parte de abajo de la foto, para que lo que se
+ * ponga encima se lea con cualquier coche detrás —un techo blanco al sol es lo
+ * que rompe estas cosas—.
+ */
+@utility photo-scrim {
+    @apply pointer-events-none absolute inset-x-0 bottom-0 h-2/5
+        bg-gradient-to-t from-neutral-950/65 via-neutral-950/20 to-transparent;
+}
+
+/* Difuminado en los dos extremos de la tira, para que las fotos no se corten en
+   seco contra el borde de la pantalla. */
+@utility marquee-mask {
+    mask-image: linear-gradient(to right, transparent, #000 6rem, #000 calc(100% - 6rem), transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 6rem, #000 calc(100% - 6rem), transparent);
 }
 
 @utility chip-accent {

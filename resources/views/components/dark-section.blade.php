@@ -6,7 +6,11 @@
      negro. --}}
 <section {{ $attributes->merge(['class' => 'relative isolate overflow-hidden bg-ink text-white grain']) }}>
     <div class="aurora animate-float -top-40 -left-32 h-[34rem] w-[34rem] bg-brand-600/45"></div>
-    <div class="aurora animate-float-slow -top-24 right-0 h-[26rem] w-[26rem] bg-accent-500/25"></div>
+
+    {{-- El ámbar va flojo y muy arriba a propósito: en una franja alta se lee como
+         un amanecer en una esquina, pero en una de doscientos píxeles lo que se ve
+         es justo su centro, y con más peso deja la franja entera marrón. --}}
+    <div class="aurora animate-float-slow -top-52 -right-16 h-[26rem] w-[26rem] bg-accent-500/20"></div>
 
     @if ($tone === 'full')
         <div class="aurora animate-float-slow bottom-[-14rem] left-1/3 h-[24rem] w-[24rem] bg-brand-400/20"></div>
