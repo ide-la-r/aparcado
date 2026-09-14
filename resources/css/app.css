@@ -116,52 +116,65 @@
  * derecha al pasar por encima. Quieto es sobrio; lo que lo hace bueno es lo que
  * pasa al tocarlo.
  */
+/*
+ * Dos capas de fondo del propio botón, no un pseudoelemento: la primera pinta las
+ * letras y la segunda el relleno, las dos con el mismo corte seco y la misma
+ * posición, así que van juntas por construcción.
+ *
+ * Es la única forma que funciona, y costó dos intentos:
+ *
+ *  · A mitad del barrido ningún color único vale para el texto. Blanco desde el
+ *    principio deja blanca sobre blanco la parte que el relleno aún no ha tapado;
+ *    azul hasta el final deja azul sobre azul la parte ya tapada. Media palabra
+ *    desaparece, y retrasar el cambio sólo elige cuál de las dos mitades se va.
+ *  · Recortar el degradado a la forma del texto sí lo resuelve, pero entonces el
+ *    color de las letras viene del **fondo** del botón, y un pseudoelemento con
+ *    `z-index: -1` se pinta por detrás del fondo de su propio padre: el relleno
+ *    se comía las letras en lugar de pasar por debajo.
+ *
+ * Con dos capas no hay nada detrás de nada: las capas de fondo se pintan en orden,
+ * la primera encima. Y el recorte a la caja respeta el radio del botón, así que
+ * tampoco puede asomar ningún canto recto por las esquinas.
+ */
 @utility btn-primary {
-    /*
-     * `overflow-hidden` es lo que da al relleno la forma del botón, y no es
-     * opcional: si el relleno lleva su propio `border-radius`, `scaleX` se lo
-     * aplasta —al 12% de ancho un radio de 12 px queda en una elipse de 1,4—, deja
-     * de encajar con la curva y en el último tramo de la animación asoma un canto
-     * recto por fuera de las esquinas redondeadas. Recortado por el botón, el
-     * relleno es un rectángulo pelado y la forma siempre es la buena.
-     */
-    @apply overflow-hidden bg-transparent font-semibold text-brand-700
-        ring-[1.5px] ring-brand-600 ring-inset hover:text-white;
+    @apply bg-transparent font-semibold text-brand-700 ring-[1.5px] ring-brand-600 ring-inset;
 
-    &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        background: var(--color-brand-600);
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
+    background-image:
+        linear-gradient(to right, #ffffff 50%, var(--color-brand-700) 50%),
+        linear-gradient(to right, var(--color-brand-600) 50%, transparent 50%);
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    background-repeat: no-repeat;
+    background-clip: text, border-box;
+    -webkit-background-clip: text, border-box;
+    /* Y no `color: transparent`: un navegador que no entienda esto se queda con el
+       color de arriba en lugar de con un botón sin texto. */
+    -webkit-text-fill-color: transparent;
+    transition: background-position 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 
-    &:hover::before {
-        transform: scaleX(1);
+    &:hover {
+        background-position: 0 0;
     }
 }
 
 /* El mismo gesto sobre un fondo oscuro: se llena de blanco. */
+/* El mismo gesto sobre un fondo oscuro: se llena de blanco. */
 @utility btn-on-dark {
-    @apply overflow-hidden bg-transparent text-white ring-[1.5px] ring-white/45 ring-inset
-        hover:text-ink hover:ring-white;
+    @apply bg-transparent text-white ring-[1.5px] ring-white/45 ring-inset hover:ring-white;
 
-    &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        background: #fff;
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
+    background-image:
+        linear-gradient(to right, var(--color-ink) 50%, #ffffff 50%),
+        linear-gradient(to right, #ffffff 50%, transparent 50%);
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    background-repeat: no-repeat;
+    background-clip: text, border-box;
+    -webkit-background-clip: text, border-box;
+    -webkit-text-fill-color: transparent;
+    transition: background-position 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 
-    &:hover::before {
-        transform: scaleX(1);
+    &:hover {
+        background-position: 0 0;
     }
 }
 
