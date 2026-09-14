@@ -117,15 +117,22 @@
  * pasa al tocarlo.
  */
 @utility btn-primary {
-    @apply bg-transparent font-semibold text-brand-700 ring-[1.5px] ring-brand-600 ring-inset
-        hover:text-white;
+    /*
+     * `overflow-hidden` es lo que da al relleno la forma del botón, y no es
+     * opcional: si el relleno lleva su propio `border-radius`, `scaleX` se lo
+     * aplasta —al 12% de ancho un radio de 12 px queda en una elipse de 1,4—, deja
+     * de encajar con la curva y en el último tramo de la animación asoma un canto
+     * recto por fuera de las esquinas redondeadas. Recortado por el botón, el
+     * relleno es un rectángulo pelado y la forma siempre es la buena.
+     */
+    @apply overflow-hidden bg-transparent font-semibold text-brand-700
+        ring-[1.5px] ring-brand-600 ring-inset hover:text-white;
 
     &::before {
         content: '';
         position: absolute;
         inset: 0;
         z-index: -1;
-        border-radius: inherit;
         background: var(--color-brand-600);
         transform: scaleX(0);
         transform-origin: left;
@@ -139,7 +146,7 @@
 
 /* El mismo gesto sobre un fondo oscuro: se llena de blanco. */
 @utility btn-on-dark {
-    @apply bg-transparent text-white ring-[1.5px] ring-white/45 ring-inset
+    @apply overflow-hidden bg-transparent text-white ring-[1.5px] ring-white/45 ring-inset
         hover:text-ink hover:ring-white;
 
     &::before {
@@ -147,7 +154,6 @@
         position: absolute;
         inset: 0;
         z-index: -1;
-        border-radius: inherit;
         background: #fff;
         transform: scaleX(0);
         transform-origin: left;
