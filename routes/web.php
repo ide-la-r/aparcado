@@ -38,6 +38,14 @@ Route::post('/pagos/paypal/aviso', [PaymentController::class, 'webhook'])
 Route::middleware(['internal'])->withoutMiddleware([VerifyCsrfToken::class])->prefix('internal')->group(function () {
     Route::post('/close-bookings', [InternalTaskController::class, 'closeBookings'])
         ->name('internal.close-bookings');
+
+    /*
+     * Y las dos de administración. Están aquí porque en el plan gratuito de Render
+     * **no hay consola** —el Shell es de pago—, así que sin ellas no habría forma
+     * de verificar una cuenta en producción y nadie podría publicar un coche.
+     */
+    Route::post('/verify', [InternalTaskController::class, 'verify'])->name('internal.verify');
+    Route::post('/seed-demo', [InternalTaskController::class, 'seedDemo'])->name('internal.seed-demo');
 });
 
 Route::middleware('guest')->group(function () {

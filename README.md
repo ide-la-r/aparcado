@@ -60,6 +60,28 @@ PAYPAL_WEBHOOK_ID=...
 
 Sin ellas la pantalla de pago lo dice y no se rompe nada.
 
+## Administrar sin consola
+
+El Shell de Render es de pago, así que las dos cosas que hacen falta desde fuera
+viven detrás del mismo token que usa el cron (`INTERNAL_TASK_TOKEN`):
+
+```sh
+APP_URL=https://aparcado.onrender.com
+TOKEN=...   # el valor de INTERNAL_TASK_TOKEN en el panel de Render
+
+# Dar por buenos los papeles de una cuenta
+curl -X POST "$APP_URL/internal/verify" \
+     -H "Authorization: Bearer $TOKEN" \
+     -H 'Content-Type: application/json' -H 'Accept: application/json' \
+     -d '{"email":"tu@correo"}'
+
+# Sembrar los datos de ejemplo (sólo sobre una base de datos sin coches)
+curl -X POST "$APP_URL/internal/seed-demo" \
+     -H "Authorization: Bearer $TOKEN" -H 'Accept: application/json'
+```
+
+Sin el token, esas rutas devuelven 404: no confirman ni que existan.
+
 ## Cómo se despliega
 
 Render (plan gratuito, sin tarjeta) + Postgres de Neon + GitHub Actions para lo

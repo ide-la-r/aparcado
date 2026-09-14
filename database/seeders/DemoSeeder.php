@@ -11,13 +11,17 @@ use App\Models\Message;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 /**
  * Datos de ejemplo para poder mirar la aplicación desde el primer día: tres dueños
  * con planes distintos —para ver el orden del catálogo—, sus coches repartidos por
  * cuatro provincias, alguien que alquila y una conversación empezada.
  *
- * Todas las contraseñas son «password».
+ * En local la contraseña de todos es «password». **En producción no**: son cinco
+ * cuentas en una web abierta a internet, y con una contraseña que se adivina
+ * cualquiera podría entrar como el dueño de un coche y borrarlo. Allí se les pone
+ * una aleatoria que no sabe nadie, y quien quiera usar la aplicación se registra.
  */
 class DemoSeeder extends Seeder
 {
@@ -25,25 +29,29 @@ class DemoSeeder extends Seeder
     {
         $features = Feature::query()->pluck('id', 'slug');
 
-        $ismael = User::factory()->create([
+        $gente = User::factory()->state([
+            'password' => app()->isProduction() ? Str::password(40) : 'password',
+        ]);
+
+        $ismael = $gente->create([
             'name' => 'Ismael',
             'surname' => 'De la Rosa',
             'email' => 'ismael@aparcado.test',
         ]);
 
-        $premium = User::factory()->create([
+        $premium = $gente->create([
             'name' => 'Lucía',
             'surname' => 'Ortega',
             'email' => 'lucia@aparcado.test',
         ]);
 
-        $plus = User::factory()->create([
+        $plus = $gente->create([
             'name' => 'Marcos',
             'surname' => 'Herrera',
             'email' => 'marcos@aparcado.test',
         ]);
 
-        $sinPlan = User::factory()->create([
+        $sinPlan = $gente->create([
             'name' => 'Nuria',
             'surname' => 'Cano',
             'email' => 'nuria@aparcado.test',
@@ -51,7 +59,7 @@ class DemoSeeder extends Seeder
 
         // Quien alquila todavía no ha pasado la verificación: sirve para ver la
         // pantalla de «tenemos que mirar tus papeles».
-        $inquilino = User::factory()->pendingReview()->create([
+        $inquilino = $gente->pendingReview()->create([
             'name' => 'Diego',
             'surname' => 'Salas',
             'email' => 'diego@aparcado.test',
