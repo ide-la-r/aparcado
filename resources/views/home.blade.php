@@ -89,46 +89,49 @@
         </div>
     </section>
 
-    <section class="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
-        <div class="card overflow-hidden" data-reveal="0">
-            <div class="grid gap-8 p-6 sm:grid-cols-2 sm:p-10">
-                <div class="flex flex-col justify-center">
-                    <h2 class="text-2xl font-bold sm:text-3xl">¿Tienes un coche parado?</h2>
-                    <p class="mt-3 text-neutral-600">
-                        Publícalo gratis y sin exclusividad. Y si quieres que se vea antes que los
-                        demás en tu provincia, hay dos planes.
-                    </p>
+    {{-- La despedida en oscuro, haciendo pareja con la portada, y el único botón
+         con halo de toda la página: si hubiera dos, ninguno llamaría. --}}
+    <x-dark-section tone="soft">
+        <div class="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:grid-cols-2 sm:px-6 sm:py-20">
+            <div class="flex flex-col justify-center">
+                <h2 class="text-3xl font-bold text-balance sm:text-4xl">¿Tienes un coche parado?</h2>
+                <p class="mt-4 max-w-sm text-white/60">
+                    Publícalo gratis y sin exclusividad. Y si quieres que se vea antes que los
+                    demás en tu provincia, hay dos planes.
+                </p>
 
-                    <a href="{{ route('register') }}" class="btn btn-primary btn-shine mt-6 self-start">
-                        Publicar mi coche
-                    </a>
+                <div class="mt-8 flex flex-wrap gap-3">
+                    <a href="{{ route('register') }}" class="btn btn-halo">Publicar mi coche</a>
+                    <a href="{{ route('pages.help') }}" class="btn btn-on-dark">Cómo va lo de los planes</a>
                 </div>
-
-                <ul class="space-y-3">
-                    @foreach (config('aparcado.plans') as $slug => $plan)
-                        <li @class([
-                            'flex items-baseline justify-between gap-4 rounded-xl px-4 py-3.5 transition',
-                            'bg-gradient-to-r from-accent-50 to-accent-100/60 ring-1 ring-accent-200 hover:ring-accent-300' => $slug === 'premium',
-                            'bg-neutral-50 ring-1 ring-neutral-100 hover:ring-neutral-200' => $slug !== 'premium',
-                        ])>
-                            <div>
-                                <p class="flex flex-wrap items-center gap-2 font-semibold">
-                                    {{ $plan['name'] }}
-                                    @if ($slug === 'premium')
-                                        <span class="chip chip-accent">El primero de todos</span>
-                                    @endif
-                                </p>
-                                <p class="mt-0.5 text-sm text-neutral-600">{{ $plan['blurb'] }}</p>
-                            </div>
-
-                            <p class="shrink-0 text-right text-sm">
-                                <span class="price">{{ \App\Support\Money::format($plan['price_cents']) }}</span>
-                                <span class="block text-xs text-neutral-500">al mes</span>
-                            </p>
-                        </li>
-                    @endforeach
-                </ul>
             </div>
+
+            <ul class="space-y-3">
+                @foreach (config('aparcado.plans') as $slug => $plan)
+                    <li @class([
+                        'flex items-baseline justify-between gap-4 rounded-xl px-4 py-4 backdrop-blur transition',
+                        'bg-accent-400/10 ring-1 ring-accent-400/35 hover:ring-accent-400/60' => $slug === 'premium',
+                        'bg-white/5 ring-1 ring-white/10 hover:ring-white/20' => $slug !== 'premium',
+                    ])>
+                        <div>
+                            <p class="flex flex-wrap items-center gap-2 font-semibold">
+                                {{ $plan['name'] }}
+                                @if ($slug === 'premium')
+                                    <span class="chip bg-accent-400/20 text-accent-200">El primero de todos</span>
+                                @endif
+                            </p>
+                            <p class="mt-0.5 text-sm text-white/55">{{ $plan['blurb'] }}</p>
+                        </div>
+
+                        <p class="shrink-0 text-right text-sm">
+                            <span class="font-display font-bold tracking-tight text-white">
+                                {{ \App\Support\Money::format($plan['price_cents']) }}
+                            </span>
+                            <span class="block text-xs text-white/40">al mes</span>
+                        </p>
+                    </li>
+                @endforeach
+            </ul>
         </div>
-    </section>
+    </x-dark-section>
 </x-layouts.app>

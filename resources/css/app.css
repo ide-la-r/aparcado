@@ -53,10 +53,6 @@
     66% { transform: translate3d(-5%, 6%, 0) scale(0.94); }
 }
 
-@keyframes sheen {
-    to { transform: translateX(220%) skewX(-18deg); }
-}
-
 @layer base {
     /* Sin esto, el icono del ojo tachado asoma un instante antes de que Alpine
        arranque. */
@@ -103,29 +99,88 @@
 
 /* ─── Botones ──────────────────────────────────────────────────────────────── */
 
+/*
+ * `isolate` no es decorativo: los rellenos van en un `::before` con z-index
+ * negativo, y sin un contexto de apilamiento propio ese relleno se pintaría detrás
+ * del fondo del contenedor en lugar de detrás del texto del botón.
+ */
 @utility btn {
-    @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl px-4 py-2.5
+    @apply relative isolate inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5
         text-sm font-semibold transition duration-200 outline-none
         focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2
         active:scale-[0.98];
 }
 
+/*
+ * El botón principal: sólo el contorno, y el color entra barriendo de izquierda a
+ * derecha al pasar por encima. Quieto es sobrio; lo que lo hace bueno es lo que
+ * pasa al tocarlo.
+ */
 @utility btn-primary {
-    /*
-     * Degradado, sombra del color del propio botón y un filo claro arriba. Ese
-     * filo es el detalle que separa un botón de un rectángulo de color: imita la
-     * luz cayendo sobre algo con volumen.
-     */
-    @apply bg-gradient-to-b from-brand-500 to-brand-700 text-white
-        shadow-[0_1px_0_0_rgba(255,255,255,0.25)_inset,0_8px_20px_-6px_var(--color-brand-700)]
-        hover:from-brand-400 hover:to-brand-600
-        hover:shadow-[0_1px_0_0_rgba(255,255,255,0.35)_inset,0_12px_26px_-6px_var(--color-brand-600)];
+    @apply bg-transparent font-semibold text-brand-700 ring-[1.5px] ring-brand-600 ring-inset
+        hover:text-white;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: inherit;
+        background: var(--color-brand-600);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    &:hover::before {
+        transform: scaleX(1);
+    }
 }
 
-@utility btn-accent {
-    @apply bg-gradient-to-b from-accent-400 to-accent-600 text-accent-950
-        shadow-[0_1px_0_0_rgba(255,255,255,0.4)_inset,0_8px_20px_-6px_var(--color-accent-600)]
-        hover:from-accent-300 hover:to-accent-500;
+/* El mismo gesto sobre un fondo oscuro: se llena de blanco. */
+@utility btn-on-dark {
+    @apply bg-transparent text-white ring-[1.5px] ring-white/45 ring-inset
+        hover:text-ink hover:ring-white;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: inherit;
+        background: #fff;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    &:hover::before {
+        transform: scaleX(1);
+    }
+}
+
+/*
+ * Y el de la llamada grande sobre fondo oscuro: un resplandor de color detrás que
+ * se enciende al acercarte. Sólo uno por página, o deja de llamar la atención.
+ */
+@utility btn-halo {
+    @apply bg-brand-600 text-white hover:bg-brand-500;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: -3px;
+        z-index: -1;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--color-brand-400), var(--color-accent-500), var(--color-brand-400));
+        filter: blur(10px);
+        opacity: 0.5;
+        transition: opacity 0.3s ease;
+    }
+
+    &:hover::before {
+        opacity: 0.95;
+    }
 }
 
 @utility btn-secondary {
@@ -135,33 +190,6 @@
 
 @utility btn-ghost {
     @apply text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900;
-}
-
-@utility btn-on-dark {
-    @apply bg-white/10 text-white ring-1 ring-white/20 ring-inset backdrop-blur
-        hover:bg-white/20 hover:ring-white/30;
-}
-
-/*
- * El brillo que cruza el botón al pasar por encima. Es puro adorno, pero es de los
- * adornos que hacen que algo parezca terminado.
- */
-@utility btn-shine {
-    &::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: -60%;
-        width: 40%;
-        background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.35), transparent);
-        transform: translateX(-120%) skewX(-18deg);
-        pointer-events: none;
-    }
-
-    &:hover::after {
-        animation: sheen 0.75s ease-out;
-    }
 }
 
 /* ─── Formularios ──────────────────────────────────────────────────────────── */

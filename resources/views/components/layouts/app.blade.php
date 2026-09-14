@@ -51,7 +51,7 @@
             <div class="ml-auto flex items-center gap-2 sm:ml-0">
                 @guest
                     <a href="{{ route('login') }}" class="btn btn-ghost">Entrar</a>
-                    <a href="{{ route('register') }}" class="btn btn-primary btn-shine">Crear cuenta</a>
+                    <a href="{{ route('register') }}" class="btn btn-primary">Crear cuenta</a>
                 @else
                     <a href="{{ route('profile.show') }}" class="btn btn-ghost">
                         <span class="hidden sm:inline">Hola,&nbsp;</span>{{ auth()->user()->name }}
