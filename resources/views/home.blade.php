@@ -182,9 +182,19 @@
     </section>
 
     {{-- La despedida en oscuro, haciendo pareja con la portada, y el único botón
-         con halo de toda la página: si hubiera dos, ninguno llamaría. --}}
-    <x-dark-section tone="soft">
-        <div class="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:grid-cols-2 sm:px-6 sm:py-20">
+         con halo de toda la página: si hubiera dos, ninguno llamaría.
+
+         Va en un panel con las esquinas redondeadas y aire alrededor, no en una
+         franja a sangre. Pegada al pie —que también es oscuro— eran ochocientos
+         píxeles seguidos de negro para terminar la página, y por bien que se
+         empalmaran los dos fondos el corte se notaba. Así el blanco vuelve a
+         separarlos, la página alterna claro y oscuro de arriba abajo, y la llamada
+         se queda donde tiene que estar: la última. --}}
+    {{-- Sin relleno abajo: la separación con el pie ya la pone su propio margen, y
+         sumando las dos salían ciento sesenta píxeles de blanco. --}}
+    <section class="mx-auto max-w-6xl px-4 pt-2 sm:px-6 sm:pt-4">
+    <x-dark-section tone="soft" class="rounded-3xl shadow-2xl shadow-brand-950/20">
+        <div class="grid gap-10 p-8 sm:grid-cols-2 sm:p-12">
             <div class="flex flex-col justify-center">
                 <h2 class="text-3xl font-bold text-balance sm:text-4xl">¿Tienes un coche parado?</h2>
                 <p class="mt-4 max-w-sm text-white/60">
@@ -226,4 +236,5 @@
             </ul>
         </div>
     </x-dark-section>
+    </section>
 </x-layouts.app>
