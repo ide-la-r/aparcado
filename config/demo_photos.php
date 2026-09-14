@@ -23,6 +23,7 @@ return [
         'model' => 'Seat Ibiza',
         'photos' => [
             ['file' => 'demo/coche-1.jpg', 'author' => 'Johannes Maximilian', 'licence' => 'CC BY-SA 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:Seat_Ibiza_FR_IAA_2019_JM_1120.jpg'],
+            ['file' => 'demo/coche-1-b.jpg', 'author' => 'NauyopTaiwan', 'licence' => 'CC BY-SA 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:2018_SEAT_Ibiza_FR.jpg'],
         ],
     ],
 
@@ -31,6 +32,8 @@ return [
         'model' => 'Volkswagen Golf',
         'photos' => [
             ['file' => 'demo/coche-2.jpg', 'author' => 'Vauxford', 'licence' => 'CC BY-SA 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:2020_Volkswagen_Golf_Style_1.5_Front.jpg'],
+            ['file' => 'demo/coche-2-b.jpg', 'author' => 'Vauxford', 'licence' => 'CC BY-SA 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:2020_Volkswagen_Golf_Style_1.5_Rear.jpg'],
+            ['file' => 'demo/coche-2-c.jpg', 'author' => 'Vauxford', 'licence' => 'CC BY-SA 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:2020_Volkswagen_Golf_Style_1.5_Side.jpg'],
         ],
     ],
 
@@ -39,6 +42,8 @@ return [
         'model' => 'Dacia Duster',
         'photos' => [
             ['file' => 'demo/coche-3.jpg', 'author' => 'Vauxford', 'licence' => 'CC BY-SA 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:2018_Dacia_Duster_Comfort_1.6.jpg'],
+            ['file' => 'demo/coche-3-b.jpg', 'author' => 'Vauxford', 'licence' => 'CC BY-SA 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:2017_Dacia_Duster_Ambiance_DCi_4X2_1.5_Front.jpg'],
+            ['file' => 'demo/coche-3-c.jpg', 'author' => 'Vauxford', 'licence' => 'CC BY-SA 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:2017_Dacia_Duster_Ambiance_DCi_4X2_1.5_Rear.jpg'],
         ],
     ],
 
@@ -55,6 +60,8 @@ return [
         'model' => 'Renault Clio',
         'photos' => [
             ['file' => 'demo/coche-5.jpg', 'author' => 'Alexander Migl', 'licence' => 'CC BY-SA 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:Renault_Clio_V_Sindelfingen_2020_IMG_2304.jpg'],
+            ['file' => 'demo/coche-5-b.jpg', 'author' => 'Vauxford', 'licence' => 'CC BY-SA 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:2019_Renault_Clio_Iconic_Front.jpg'],
+            ['file' => 'demo/coche-5-c.jpg', 'author' => 'Vauxford', 'licence' => 'CC BY-SA 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:2019_Renault_Clio_Iconic_Rear.jpg'],
         ],
     ],
 
@@ -63,6 +70,8 @@ return [
         'model' => 'Volkswagen Tiguan',
         'photos' => [
             ['file' => 'demo/coche-6.jpg', 'author' => 'SSJF01', 'licence' => 'CC BY 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:Volkswagen_Tiguan_(2016%E2%80%932021).png'],
+            ['file' => 'demo/coche-6-b.jpg', 'author' => 'HJUdall', 'licence' => 'CC0', 'page' => 'https://commons.wikimedia.org/wiki/File:20_Volkswagen_Tiguan_SEL_4Motion.jpg'],
+            ['file' => 'demo/coche-6-c.jpg', 'author' => 'HJUdall', 'licence' => 'CC0', 'page' => 'https://commons.wikimedia.org/wiki/File:23_Volkswagen_Tiguan_S.jpg'],
         ],
     ],
 
@@ -71,6 +80,8 @@ return [
         'model' => 'Peugeot 208',
         'photos' => [
             ['file' => 'demo/coche-7.jpg', 'author' => 'Alexander-93', 'licence' => 'CC BY-SA 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:Peugeot_e-208_facelift_Auto_Zuerich_2023_1X7A1209.jpg'],
+            ['file' => 'demo/coche-7-b.jpg', 'author' => 'Vauxford', 'licence' => 'CC BY-SA 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:2020_Peugeot_208_Active.jpg'],
+            ['file' => 'demo/coche-7-c.jpg', 'author' => 'Vauxford', 'licence' => 'CC BY-SA 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:2020_Peugeot_208_Allure.jpg'],
         ],
     ],
 
@@ -79,6 +90,7 @@ return [
         'model' => 'Citroën Berlingo',
         'photos' => [
             ['file' => 'demo/coche-8.jpg', 'author' => 'Spielvogel', 'licence' => 'CC0', 'page' => 'https://commons.wikimedia.org/wiki/File:Citroen_Berlingo_2018_panel_van_left.jpg'],
+            ['file' => 'demo/coche-8-b.jpg', 'author' => 'Spielvogel', 'licence' => 'CC0', 'page' => 'https://commons.wikimedia.org/wiki/File:Citroen_Berlingo_2018_panel_van_right.jpg'],
         ],
     ],
 
@@ -87,6 +99,8 @@ return [
         'model' => 'Seat León',
         'photos' => [
             ['file' => 'demo/coche-9.jpg', 'author' => 'Alexander Migl', 'licence' => 'CC BY-SA 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:SEAT_Leon_Mk4_1X7A5845.jpg'],
+            ['file' => 'demo/coche-9-b.jpg', 'author' => 'Vauxford', 'licence' => 'CC BY-SA 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:2020_SEAT_Leon_FR_TSi_Evo_1.5_Front.jpg'],
+            ['file' => 'demo/coche-9-c.jpg', 'author' => 'Vauxford', 'licence' => 'CC BY-SA 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:2020_SEAT_Leon_FR_TSi_Evo_1.5_Rear.jpg'],
         ],
     ],
 
@@ -95,6 +109,7 @@ return [
         'model' => 'Fiat 500',
         'photos' => [
             ['file' => 'demo/coche-10.jpg', 'author' => 'Vauxford', 'licence' => 'CC BY-SA 4.0', 'page' => 'https://commons.wikimedia.org/wiki/File:2016_Fiat_500_Lounge_1.2_Rear.jpg'],
+            ['file' => 'demo/coche-10-b.jpg', 'author' => 'Jeremy Segrott', 'licence' => 'CC BY 2.0', 'page' => 'https://commons.wikimedia.org/wiki/File:Blues_(20008795753).jpg'],
         ],
     ],
 
