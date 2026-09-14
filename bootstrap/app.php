@@ -39,6 +39,22 @@ return Application::configure(basePath: dirname(__DIR__))
             'identity' => EnsureUserIsVerified::class,
             'internal' => EnsureInternalToken::class,
         ]);
+
+        /*
+         * Las dos puertas que se abren desde fuera y no pueden traer un token de
+         * formulario: el aviso de PayPal y las tareas que lanza GitHub Actions.
+         *
+         * Va aquí y no con un `withoutMiddleware()` en la ruta porque eso hay que
+         * acertarlo con el nombre exacto de la clase, y en Laravel 13 la buena es
+         * `PreventRequestForgery` —`VerifyCsrfToken` y `ValidateCsrfToken` son
+         * alias obsoletos—. Excluir el alias no excluye nada, y el fallo no se ve
+         * en los tests porque ese middleware se salta entero cuando corre la suite:
+         * apareció desplegando, con un 419 donde tenía que haber un 404.
+         */
+        $middleware->preventRequestForgery(except: [
+            'pagos/paypal/aviso',
+            'internal/*',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

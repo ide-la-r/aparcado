@@ -10,7 +10,6 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MyCarController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
@@ -28,14 +27,12 @@ Route::view('/cookies', 'pages.cookies')->name('pages.cookies');
 
 // El aviso de PayPal viene de fuera: sin sesión, sin usuario y sin token, así que
 // no puede pasar por la comprobación de CSRF. Lo que lo protege es su firma.
-Route::post('/pagos/paypal/aviso', [PaymentController::class, 'webhook'])
-    ->withoutMiddleware([VerifyCsrfToken::class])
-    ->name('payments.webhook');
+Route::post('/pagos/paypal/aviso', [PaymentController::class, 'webhook'])->name('payments.webhook');
 
 // Lo que en un servidor normal haría el cron. En el plan gratuito de Render no
 // hay ni cron ni trabajadores, así que lo llama un flujo de GitHub Actions una
 // vez al día, y de paso despierta el contenedor dormido.
-Route::middleware(['internal'])->withoutMiddleware([VerifyCsrfToken::class])->prefix('internal')->group(function () {
+Route::middleware(['internal'])->prefix('internal')->group(function () {
     Route::post('/close-bookings', [InternalTaskController::class, 'closeBookings'])
         ->name('internal.close-bookings');
 
