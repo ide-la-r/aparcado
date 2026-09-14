@@ -92,54 +92,85 @@
         {{ $slot }}
     </main>
 
+    {{-- El pie reparte los enlaces en tres columnas en lugar de dos: con dos, la
+         mitad derecha se quedaba vacía y la lista legal salía una tira de seis. Y
+         el texto va un punto más claro y un punto más grande: a blanco al 40 % y
+         doce píxeles no se leía, se adivinaba. --}}
     <footer class="mt-20">
-        <x-dark-section tone="soft">
-        <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-            <div class="flex flex-col gap-10 sm:flex-row sm:justify-between">
-                <div class="max-w-xs">
-                    <div class="flex items-center gap-2.5">
-                        <x-logo class="h-9 w-9" />
-                        <span class="text-lg font-bold">Aparcado</span>
+        <x-dark-section tone="foot">
+        <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-20">
+            <div class="grid gap-10 lg:grid-cols-[1.15fr_1.85fr] lg:gap-16">
+                <div class="max-w-sm">
+                    <div class="flex items-center gap-3">
+                        <x-logo class="h-10 w-10" />
+                        <span class="font-display text-xl font-bold tracking-tight">Aparcado</span>
                     </div>
-                    <p class="mt-4 text-sm text-white/60">
-                        Alquiler de coches entre particulares. El coche que está parado en la
-                        puerta de tu vecino.
+
+                    <p class="mt-4 text-white/70">
+                        Alquiler de coches entre particulares. El que está parado en la puerta
+                        de tu vecino puede ser el tuyo este fin de semana.
                     </p>
+
+                    <a href="{{ route('cars.index') }}" class="link-underline mt-5 inline-flex items-center gap-1.5 text-white">
+                        Ver los coches
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M13.2 5.4 11.8 6.8 16 11H4v2h12l-4.2 4.2 1.4 1.4L20 12l-6.8-6.6Z" />
+                        </svg>
+                    </a>
                 </div>
 
-                <div class="grid gap-8 text-sm sm:grid-cols-2 sm:gap-14">
-                    <nav>
-                        <p class="text-xs font-semibold tracking-wide text-white/40 uppercase">La web</p>
-                        <ul class="mt-3 space-y-2 text-white/70">
-                            <li><a class="hover:text-white" href="{{ route('cars.index') }}">Coches</a></li>
-                            <li><a class="hover:text-white" href="{{ route('home') }}#como-funciona">Cómo funciona</a></li>
-                            <li><a class="hover:text-white" href="{{ route('pages.help') }}">Ayuda</a></li>
-                            @guest
-                                <li><a class="hover:text-white" href="{{ route('register') }}">Crear cuenta</a></li>
-                            @else
-                                <li><a class="hover:text-white" href="{{ route('my-cars.index') }}">Mis coches</a></li>
-                            @endguest
-                        </ul>
-                    </nav>
+                {{-- En el móvil las tres listas van en rejilla, no una debajo de
+                     otra: apiladas dejaban un pie de mil cien píxeles que hay que
+                     recorrer entero con el dedo. --}}
+                <div class="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-10">
+                <nav>
+                    <p class="text-sm font-semibold text-white">La web</p>
+                    <ul class="mt-4 space-y-2.5 text-white/65">
+                        <li><a class="transition hover:text-white" href="{{ route('cars.index') }}">Coches</a></li>
+                        <li><a class="transition hover:text-white" href="{{ route('home') }}#como-funciona">Cómo funciona</a></li>
+                        <li><a class="transition hover:text-white" href="{{ route('pages.help') }}">Ayuda</a></li>
+                        @guest
+                            <li><a class="transition hover:text-white" href="{{ route('register') }}">Crear cuenta</a></li>
+                            <li><a class="transition hover:text-white" href="{{ route('login') }}">Entrar</a></li>
+                        @else
+                            <li><a class="transition hover:text-white" href="{{ route('my-cars.index') }}">Mis coches</a></li>
+                            <li><a class="transition hover:text-white" href="{{ route('bookings.index') }}">Mis reservas</a></li>
+                        @endguest
+                    </ul>
+                </nav>
 
-                    <nav>
-                        <p class="text-xs font-semibold tracking-wide text-white/40 uppercase">Lo legal</p>
-                        <ul class="mt-3 space-y-2 text-white/70">
-                            <li><a class="hover:text-white" href="{{ route('pages.about') }}">Sobre Aparcado</a></li>
-                            <li><a class="hover:text-white" href="{{ route('pages.privacy') }}">Privacidad</a></li>
-                            <li><a class="hover:text-white" href="{{ route('pages.cookies') }}">Cookies</a></li>
-                            <li><a class="hover:text-white" href="{{ route('pages.legal') }}">Aviso legal</a></li>
-                            <li><a class="hover:text-white" href="{{ route('pages.credits') }}">Créditos de las fotos</a></li>
-                            <li><a class="hover:text-white" href="{{ route('pages.contact') }}">Contacto</a></li>
-                        </ul>
-                    </nav>
+                <nav>
+                    <p class="text-sm font-semibold text-white">El proyecto</p>
+                    <ul class="mt-4 space-y-2.5 text-white/65">
+                        <li><a class="transition hover:text-white" href="{{ route('pages.about') }}">Sobre Aparcado</a></li>
+                        <li><a class="transition hover:text-white" href="{{ route('pages.credits') }}">Créditos de las fotos</a></li>
+                        <li><a class="transition hover:text-white" href="{{ route('pages.contact') }}">Contacto</a></li>
+                        <li>
+                            <a class="transition hover:text-white" href="https://github.com/ide-la-r/aparcado"
+                               rel="noopener" target="_blank">El código, en GitHub</a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <nav>
+                    <p class="text-sm font-semibold text-white">Lo legal</p>
+                    <ul class="mt-4 space-y-2.5 text-white/65">
+                        <li><a class="transition hover:text-white" href="{{ route('pages.legal') }}">Aviso legal</a></li>
+                        <li><a class="transition hover:text-white" href="{{ route('pages.privacy') }}">Privacidad</a></li>
+                        <li><a class="transition hover:text-white" href="{{ route('pages.cookies') }}">Cookies</a></li>
+                    </ul>
+                </nav>
                 </div>
             </div>
 
-            <p class="mt-12 border-t border-white/10 pt-6 text-xs text-white/40">
-                Proyecto personal, sin ánimo de lucro y sin alquileres reales. La idea viene
-                de SocialiCar, un trabajo de fin de grado hecho en equipo.
-            </p>
+            <div class="mt-12 flex flex-col gap-3 border-t border-white/10 pt-7 text-sm text-white/50 sm:mt-14 sm:flex-row sm:items-center sm:justify-between">
+                <p class="max-w-xl">
+                    Proyecto personal, sin ánimo de lucro y sin alquileres reales. La idea viene
+                    de SocialiCar, un trabajo de fin de grado hecho en equipo.
+                </p>
+
+                <p class="shrink-0">© {{ now()->year }} Aparcado</p>
+            </div>
         </div>
         </x-dark-section>
     </footer>

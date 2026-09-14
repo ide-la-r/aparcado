@@ -358,6 +358,25 @@
     @apply pointer-events-none absolute rounded-full blur-3xl;
 }
 
+/*
+ * El pie es otra sección oscura, y se separa del contenido con un margen. Cuando
+ * la página ya termina en oscuro —la portada, sin ir más lejos— ese margen queda
+ * entre dos bloques negros y lo que se ve es una franja blanca cortando la página
+ * por la mitad. Aquí el pie se pega y los dos bloques se leen como uno.
+ *
+ * Va por regla y no a mano en cada vista para que valga también para la siguiente
+ * página que termine en oscuro, sin tener que acordarse.
+ *
+ * **Y va sin capa a propósito.** Dentro de `@layer base` esto no hacía nada: el
+ * margen que tiene que ganar es un `mt-20`, que sale en `@layer utilities`, y una
+ * capa posterior gana a una anterior por mucha especificidad que tenga la regla.
+ * Una regla sin capa gana a todas las que la tienen, que es justo lo que hace
+ * falta aquí.
+ */
+main:has(> [data-dark-section]:last-child) + footer {
+    margin-top: 0;
+}
+
 /* ─── Aparición al bajar ───────────────────────────────────────────────────── */
 
 /*

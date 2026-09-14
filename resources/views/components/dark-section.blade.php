@@ -1,19 +1,37 @@
 @props(['tone' => 'full'])
 
-{{-- El fondo de las secciones oscuras: dos manchas de color que flotan muy
-     despacio y una capa de grano encima. El grano es lo que evita que un degradado
-     grande se vea a bandas; las manchas son lo que evita que parezca un rectángulo
-     negro. --}}
-<section {{ $attributes->merge(['class' => 'relative isolate overflow-hidden bg-ink text-white grain']) }}>
-    <div class="aurora animate-float -top-40 -left-32 h-[34rem] w-[34rem] bg-brand-600/45"></div>
+{{-- El fondo de las secciones oscuras: manchas de color que flotan muy despacio y
+     una capa de grano encima. El grano es lo que evita que un degradado grande se
+     vea a bandas; las manchas son lo que evita que parezca un rectángulo negro.
 
-    {{-- El ámbar va flojo y muy arriba a propósito: en una franja alta se lee como
-         un amanecer en una esquina, pero en una de doscientos píxeles lo que se ve
-         es justo su centro, y con más peso deja la franja entera marrón. --}}
-    <div class="aurora animate-float-slow -top-52 -right-16 h-[26rem] w-[26rem] bg-accent-500/20"></div>
+     Tres versiones:
+       · `full` — la portada: las manchas arriba y una tercera abajo.
+       · `soft` — las franjas de cabecera: las mismas de arriba y nada más.
+       · `foot` — el pie: las manchas **abajo**. Cuando la página ya termina en
+         oscuro, el pie va pegado a la sección anterior (ver la regla de `app.css`),
+         y si los dos bloques empezaran con el resplandor arriba se vería un escalón
+         justo en la unión: oscuro abajo del primero, azul brillante arriba del
+         segundo. Con las manchas abajo, lo que se tocan son dos zonas oscuras y la
+         unión no existe.
 
-    @if ($tone === 'full')
-        <div class="aurora animate-float-slow bottom-[-14rem] left-1/3 h-[24rem] w-[24rem] bg-brand-400/20"></div>
+     El distintivo `data-dark-section` no es decorativo: es lo que deja al pie
+     pegarse. --}}
+<section data-dark-section {{ $attributes->merge(['class' => 'relative isolate overflow-hidden bg-ink text-white grain']) }}>
+    @if ($tone === 'foot')
+        <div class="aurora animate-float -bottom-40 -left-32 h-[34rem] w-[34rem] bg-brand-600/40"></div>
+        <div class="aurora animate-float-slow -right-16 -bottom-52 h-[26rem] w-[26rem] bg-accent-500/18"></div>
+    @else
+        <div class="aurora animate-float -top-40 -left-32 h-[34rem] w-[34rem] bg-brand-600/45"></div>
+
+        {{-- El ámbar va flojo y muy arriba a propósito: en una franja alta se lee
+             como un amanecer en una esquina, pero en una de doscientos píxeles lo
+             que se ve es justo su centro, y con más peso deja la franja entera
+             marrón. --}}
+        <div class="aurora animate-float-slow -top-52 -right-16 h-[26rem] w-[26rem] bg-accent-500/20"></div>
+
+        @if ($tone === 'full')
+            <div class="aurora animate-float-slow bottom-[-14rem] left-1/3 h-[24rem] w-[24rem] bg-brand-400/20"></div>
+        @endif
     @endif
 
     {{-- La rejilla, muy tenue, para que el fondo tenga textura. --}}
