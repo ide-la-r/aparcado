@@ -259,6 +259,45 @@
     @apply inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-medium text-neutral-700;
 }
 
+/* ─── Chat ─────────────────────────────────────────────────────────────────── */
+
+/*
+ * Las burbujas viven aquí y no en las vistas porque se pintan desde dos sitios:
+ * Blade al cargar la conversación y JavaScript según van llegando mensajes. Con
+ * las clases sueltas en cada sitio, el mensaje que llegaba solo acababa
+ * pareciéndose al de al lado pero no del todo.
+ *
+ * La esquina de abajo sin redondear del todo es la que da el «pico» del lado de
+ * quien habla, que es lo que hace que un hilo se lea de un vistazo.
+ */
+@utility bubble {
+    @apply max-w-[min(85%,34rem)] rounded-2xl px-3.5 py-2 text-sm leading-relaxed break-words
+        shadow-sm;
+}
+
+@utility bubble-mine {
+    @apply rounded-br-sm bg-brand-600 text-white shadow-brand-900/15;
+}
+
+@utility bubble-theirs {
+    @apply rounded-bl-sm bg-white text-neutral-900 ring-1 ring-neutral-900/5 shadow-neutral-900/5;
+}
+
+/* La hora, dentro de la burbuja y sin pelearse con el texto. */
+@utility bubble-time {
+    @apply mt-0.5 flex items-center justify-end gap-1 text-[0.68rem] tabular-nums;
+}
+
+/* La raya con el día, en medio del hilo. */
+@utility chat-day {
+    @apply sticky top-0 z-10 my-3 flex justify-center;
+
+    & > span {
+        @apply rounded-full bg-neutral-200/85 px-2.5 py-0.5 text-[0.7rem] font-semibold
+            text-neutral-600 backdrop-blur;
+    }
+}
+
 /* ─── Fotos ────────────────────────────────────────────────────────────────── */
 
 /*

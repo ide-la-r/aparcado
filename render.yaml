@@ -33,8 +33,10 @@ services:
             value: es
           - key: APP_FALLBACK_LOCALE
             value: en
-          - key: APP_TIMEZONE
-            value: Europe/Madrid
+          # APP_TIMEZONE ya no está aquí: desde Laravel 11 `config/app.php` no lee
+          # esa variable, así que tenerla puesta daba la falsa impresión de que la
+          # hora estaba resuelta mientras la web iba en UTC y el chat enseñaba dos
+          # horas de menos. La zona vive en la configuración, versionada.
 
           # Postgres externo (Neon). La cadena entera en DB_URL.
           - key: DB_CONNECTION

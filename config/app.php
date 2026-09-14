@@ -60,12 +60,28 @@ return [
     |--------------------------------------------------------------------------
     |
     | Here you may specify the default timezone for your application, which
-    | will be used by the PHP date and date-time functions. The timezone
-    | is set to "UTC" by default as it is suitable for most use cases.
+    | will be used by the PHP date and date-time functions.
+    |
+    | Aquí es Europe/Madrid, escrito y versionado: esta aplicación es de España y
+    | para España, así que la hora del país no es una decisión del entorno. Dos
+    | motivos, y el segundo es el gordo:
+    |
+    |  · En UTC el chat enseñaba las 11:00 cuando eran las 13:00. En verano España
+    |    va dos horas por delante, y una hora mal en un chat no parece un detalle:
+    |    parece que la web está rota.
+    |  · `Carbon::today()` es lo que decide las fechas de las reservas. En UTC,
+    |    entre medianoche y las dos de la mañana hora española «hoy» todavía es
+    |    ayer, así que a esas horas se podría reservar un día ya pasado y la
+    |    disponibilidad saldría corrida un día entero.
+    |
+    | Ojo con `APP_TIMEZONE`: desde Laravel 11 este fichero ya NO lee esa variable,
+    | así que ponerla en el entorno no hace absolutamente nada. Estaba puesta en
+    | `render.yaml`, y por eso el fallo pasó desapercibido tanto tiempo: parecía
+    | resuelto y no lo estaba.
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Europe/Madrid',
 
     /*
     |--------------------------------------------------------------------------

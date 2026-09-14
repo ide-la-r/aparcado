@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Car;
 use App\Models\Conversation;
 use App\Models\Message;
+use App\Models\User;
 use App\Services\Chat\Conversations;
+use App\Support\ChatTime;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -56,7 +58,16 @@ class MessageController extends Controller
         return redirect()->route('messages.show', $conversation);
     }
 
-    public function store(Request $request, Conversation $conversation): RedirectResponse
+    /**
+     * Enviar.
+     *
+     * Responde en JSON cuando quien llama lo pide, que es lo que permite escribir
+     * sin recargar la página entera: en un chat, perder el sitio del hilo y el foco
+     * del cuadro de texto con cada mensaje se nota muchísimo. El formulario de
+     * siempre sigue estando ahí para quien tenga el JavaScript apagado, y por ese
+     * camino la respuesta sigue siendo la redirección.
+     */
+    public function store(Request $request, Conversation $conversation): RedirectResponse|JsonResponse
     {
         $this->authorize('send', $conversation);
 
@@ -64,7 +75,11 @@ class MessageController extends Controller
             'body' => ['required', 'string', 'max:2000'],
         ], [], ['body' => 'el mensaje']);
 
-        $this->conversations->send($conversation, $request->user(), $validated['body']);
+        $message = $this->conversations->send($conversation, $request->user(), $validated['body']);
+
+        if ($request->expectsJson()) {
+            return response()->json(['message' => $this->payload($message, $request->user())]);
+        }
 
         return redirect()->route('messages.show', $conversation);
     }
@@ -89,12 +104,30 @@ class MessageController extends Controller
         $this->conversations->markAsRead($conversation, $request->user());
 
         return response()->json([
-            'messages' => $messages->map(fn (Message $message) => [
-                'id' => $message->id,
-                'body' => $message->body,
-                'mine' => $message->sender_id === $request->user()->id,
-                'at' => $message->created_at->format('H:i'),
-            ])->all(),
+            'messages' => $messages->map(fn (Message $message) => $this->payload($message, $request->user()))->all(),
+
+            /*
+             * Hasta qué mensaje mío ha leído la otra persona. Va como un solo
+             * número y no como una lista porque un chat se lee en orden: con el
+             * último basta para encender todos los visos anteriores, y así esta
+             * respuesta no crece con la conversación.
+             */
+            'read_up_to' => (int) $conversation->messages()
+                ->where('sender_id', $request->user()->id)
+                ->whereNotNull('read_at')
+                ->max('id'),
         ]);
+    }
+
+    /** @return array<string, mixed> */
+    private function payload(Message $message, User $reader): array
+    {
+        return [
+            'id' => $message->id,
+            'body' => $message->body,
+            'mine' => $message->sender_id === $reader->id,
+            'at' => ChatTime::hour($message->created_at),
+            'day' => ChatTime::day($message->created_at),
+        ];
     }
 }
