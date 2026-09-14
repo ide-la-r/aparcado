@@ -12,11 +12,17 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="flex min-h-full flex-col">
-    <header class="sticky top-0 z-30 border-b border-neutral-200 bg-white/90 backdrop-blur">
+    {{-- La cabecera nace sin borde y lo gana al bajar: encima de la portada oscura
+         una raya gris se ve como un recorte, y sobre el contenido blanco hace falta
+         para separar. --}}
+    <header x-data="{ bajado: false }"
+            @scroll.window="bajado = window.scrollY > 8"
+            class="sticky top-0 z-30 bg-white/80 backdrop-blur-md transition-shadow duration-300"
+            :class="bajado ? 'shadow-sm ring-1 ring-neutral-900/5' : ''">
         <div class="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6">
-            <a href="{{ route('home') }}" class="flex items-center gap-2.5">
-                <x-logo />
-                <span class="text-lg font-bold tracking-tight">Aparcado</span>
+            <a href="{{ route('home') }}" class="group flex items-center gap-2.5">
+                <x-logo class="h-9 w-9 transition duration-300 group-hover:-rotate-6 group-hover:scale-105" />
+                <span class="font-display text-lg font-bold tracking-tight">Aparcado</span>
             </a>
 
             <nav class="ml-auto hidden items-center gap-1 sm:flex">
@@ -45,7 +51,7 @@
             <div class="ml-auto flex items-center gap-2 sm:ml-0">
                 @guest
                     <a href="{{ route('login') }}" class="btn btn-ghost">Entrar</a>
-                    <a href="{{ route('register') }}" class="btn btn-primary">Crear cuenta</a>
+                    <a href="{{ route('register') }}" class="btn btn-primary btn-shine">Crear cuenta</a>
                 @else
                     <a href="{{ route('profile.show') }}" class="btn btn-ghost">
                         <span class="hidden sm:inline">Hola,&nbsp;</span>{{ auth()->user()->name }}
@@ -86,8 +92,9 @@
         {{ $slot }}
     </main>
 
-    <footer class="relative mt-20 overflow-hidden bg-ink ink-glow text-white">
-        <div class="relative mx-auto max-w-6xl px-4 py-14 sm:px-6">
+    <footer class="mt-20">
+        <x-dark-section tone="soft">
+        <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
             <div class="flex flex-col gap-10 sm:flex-row sm:justify-between">
                 <div class="max-w-xs">
                     <div class="flex items-center gap-2.5">
@@ -133,6 +140,7 @@
                 de SocialiCar, un trabajo de fin de grado hecho en equipo.
             </p>
         </div>
+        </x-dark-section>
     </footer>
 </body>
 </html>

@@ -4,8 +4,10 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    /* Inter para leer, Space Grotesk para los titulares. */
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-display: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, sans-serif;
 
     /* El azul de las señales de aparcamiento, que es de donde viene el nombre. */
     --color-brand-50: #eef4ff;
@@ -35,10 +37,24 @@
     --color-accent-700: #b74306;
     --color-accent-800: #94330c;
     --color-accent-900: #7a2a0d;
+    --color-accent-950: #46160a;
 
     /* El azul casi negro de las secciones de contraste. */
-    --color-ink: #0a0f1f;
-    --color-ink-soft: #131a30;
+    --color-ink: #070b18;
+    --color-ink-soft: #0f1629;
+
+    --animate-float: float 18s ease-in-out infinite;
+    --animate-float-slow: float 26s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+    33% { transform: translate3d(6%, -8%, 0) scale(1.12); }
+    66% { transform: translate3d(-5%, 6%, 0) scale(0.94); }
+}
+
+@keyframes sheen {
+    to { transform: translateX(220%) skewX(-18deg); }
 }
 
 @layer base {
@@ -52,60 +68,122 @@
         @apply bg-neutral-50 text-neutral-900 antialiased;
     }
 
+    /*
+     * Los titulares van todos con la tipografía de titulares y el interletrado
+     * cerrado. Ponerlo aquí y no clase a clase es lo que hace que la página se vea
+     * de una pieza en lugar de a trozos.
+     */
+    h1, h2, h3 {
+        font-family: var(--font-display);
+        letter-spacing: -0.025em;
+    }
+
     /* Que el ancla de una sección no quede debajo de la cabecera fija. */
     :target {
         scroll-margin-top: 6rem;
     }
 
-    /* Un rastro de color al seleccionar texto: cuesta nada y se nota. */
     ::selection {
         @apply bg-brand-200 text-brand-950;
     }
+
+    /* Nada de esto debería marear a quien pide que no le mareen. */
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
 }
 
+@utility font-display {
+    font-family: var(--font-display);
+}
+
+/* ─── Botones ──────────────────────────────────────────────────────────────── */
+
 @utility btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold
-        transition duration-150 focus-visible:outline-2 focus-visible:outline-offset-2
-        focus-visible:outline-brand-600;
+    @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl px-4 py-2.5
+        text-sm font-semibold transition duration-200 outline-none
+        focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2
+        active:scale-[0.98];
 }
 
 @utility btn-primary {
-    /* Con degradado y sombra del color del botón: uno plano no invita a pulsarlo. */
-    @apply bg-gradient-to-b from-brand-500 to-brand-700 text-white shadow-lg shadow-brand-600/25
-        hover:from-brand-400 hover:to-brand-600 hover:shadow-brand-600/35 active:to-brand-800;
+    /*
+     * Degradado, sombra del color del propio botón y un filo claro arriba. Ese
+     * filo es el detalle que separa un botón de un rectángulo de color: imita la
+     * luz cayendo sobre algo con volumen.
+     */
+    @apply bg-gradient-to-b from-brand-500 to-brand-700 text-white
+        shadow-[0_1px_0_0_rgba(255,255,255,0.25)_inset,0_8px_20px_-6px_var(--color-brand-700)]
+        hover:from-brand-400 hover:to-brand-600
+        hover:shadow-[0_1px_0_0_rgba(255,255,255,0.35)_inset,0_12px_26px_-6px_var(--color-brand-600)];
+}
+
+@utility btn-accent {
+    @apply bg-gradient-to-b from-accent-400 to-accent-600 text-accent-950
+        shadow-[0_1px_0_0_rgba(255,255,255,0.4)_inset,0_8px_20px_-6px_var(--color-accent-600)]
+        hover:from-accent-300 hover:to-accent-500;
 }
 
 @utility btn-secondary {
     @apply bg-white text-neutral-800 shadow-sm ring-1 ring-neutral-200 ring-inset
-        hover:bg-neutral-50 hover:ring-neutral-300;
+        hover:bg-neutral-50 hover:ring-neutral-300 hover:shadow-md;
 }
 
 @utility btn-ghost {
     @apply text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900;
 }
 
-/* Para los botones que van sobre una sección oscura. */
 @utility btn-on-dark {
-    @apply bg-white/10 text-white ring-1 ring-white/20 ring-inset backdrop-blur hover:bg-white/20;
+    @apply bg-white/10 text-white ring-1 ring-white/20 ring-inset backdrop-blur
+        hover:bg-white/20 hover:ring-white/30;
 }
+
+/*
+ * El brillo que cruza el botón al pasar por encima. Es puro adorno, pero es de los
+ * adornos que hacen que algo parezca terminado.
+ */
+@utility btn-shine {
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: -60%;
+        width: 40%;
+        background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.35), transparent);
+        transform: translateX(-120%) skewX(-18deg);
+        pointer-events: none;
+    }
+
+    &:hover::after {
+        animation: sheen 0.75s ease-out;
+    }
+}
+
+/* ─── Formularios ──────────────────────────────────────────────────────────── */
 
 @utility field {
     @apply w-full rounded-xl border-0 bg-white px-3.5 py-2.5 text-sm text-neutral-900 shadow-sm
-        ring-1 ring-neutral-200 ring-inset placeholder:text-neutral-400
-        focus:ring-2 focus:ring-brand-600;
+        ring-1 ring-neutral-200 ring-inset transition placeholder:text-neutral-400
+        hover:ring-neutral-300 focus:ring-2 focus:ring-brand-600;
 }
 
 @utility label {
     @apply mb-1.5 block text-xs font-semibold tracking-wide text-neutral-500 uppercase;
 }
 
+/* ─── Superficies ──────────────────────────────────────────────────────────── */
+
 @utility card {
     @apply rounded-2xl bg-white shadow-sm shadow-neutral-900/5 ring-1 ring-neutral-900/5;
 }
 
-/* Para lo que se navega: la tarjeta se levanta un poco al pasar por encima. */
 @utility card-hover {
-    @apply transition duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-neutral-900/10
+    @apply transition duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand-900/10
         hover:ring-brand-200;
 }
 
@@ -117,12 +195,71 @@
     @apply bg-accent-100 text-accent-900;
 }
 
+@utility price {
+    @apply font-display font-bold tracking-tight text-neutral-900;
+}
+
+/* ─── Enlaces ──────────────────────────────────────────────────────────────── */
+
+/* El subrayado crece de izquierda a derecha en lugar de aparecer de golpe. */
+@utility link-underline {
+    @apply relative font-medium text-brand-700;
+
+    &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -2px;
+        height: 2px;
+        border-radius: 2px;
+        background: currentColor;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.25s ease;
+    }
+
+    &:hover::after {
+        transform: scaleX(1);
+    }
+}
+
+/* ─── Secciones oscuras ────────────────────────────────────────────────────── */
+
 /*
- * Un resplandor detrás de las secciones oscuras, para que no sean un rectángulo
- * negro: azul arriba a la izquierda y un toque de ámbar a la derecha.
+ * Grano: una capa de ruido casi invisible encima del degradado. Sin ella un
+ * degradado grande se ve a bandas y «digital»; con ella parece impreso.
  */
-@utility ink-glow {
-    background-image:
-        radial-gradient(60rem 32rem at 12% -15%, color-mix(in oklab, var(--color-brand-500) 42%, transparent), transparent 70%),
-        radial-gradient(42rem 26rem at 96% 8%, color-mix(in oklab, var(--color-accent-500) 20%, transparent), transparent 70%);
+@utility grain {
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.22;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    }
+}
+
+/* Las manchas de color que flotan detrás de las secciones oscuras. */
+@utility aurora {
+    @apply pointer-events-none absolute rounded-full blur-3xl;
+}
+
+/* ─── Aparición al bajar ───────────────────────────────────────────────────── */
+
+/*
+ * Lo marcado con `data-reveal` entra desde abajo cuando aparece en pantalla. El
+ * estado inicial se pone desde JavaScript y no desde aquí: si no, sin JavaScript
+ * la página se quedaría en blanco para siempre.
+ */
+@utility revealable {
+    opacity: 0;
+    transform: translateY(1.25rem);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@utility revealed {
+    opacity: 1;
+    transform: none;
 }
