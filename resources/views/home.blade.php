@@ -13,7 +13,7 @@
 
                     {{-- En el móvil el titular baja a 36 px: a 48 ocupaba la pantalla
                          entera él solo y no quedaba sitio ni para una foto. --}}
-                    <h1 class="mt-6 text-4xl leading-[1.05] font-bold text-balance sm:text-6xl sm:leading-[1.03] xl:text-7xl">
+                    <h1 class="mt-6 text-4xl leading-[1.05] font-extrabold text-balance sm:text-6xl sm:leading-[1.03] xl:text-7xl">
                         El coche que tienes parado en la puerta
                         <span class="bg-gradient-to-r from-accent-200 via-accent-400 to-accent-500 bg-clip-text text-transparent">
                             puede estar trabajando</span>.

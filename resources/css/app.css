@@ -4,10 +4,23 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    /* Inter para leer, Space Grotesk para los titulares. */
-    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
-    --font-display: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, sans-serif;
+    /* Una sola familia para todo: lo que separa un titular de un párrafo es el peso
+       y el interletrado, no un cambio de letra. */
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-display: var(--font-sans);
+
+    /*
+     * El texto pequeño, un punto más grande de lo que trae Tailwind. Estos dos
+     * tamaños son los que llevan casi todo lo que no es un titular —las tarjetas,
+     * los botones, los campos, la ficha técnica—, y a 14 y 12 píxeles la página se
+     * leía apretada y con esfuerzo. Tocándolos aquí sube todo a la vez y sin ir
+     * clase por clase.
+     */
+    --text-sm: 0.9375rem;   /* 15 px */
+    --text-sm--line-height: calc(1.4 / 0.9375);
+    --text-xs: 0.8125rem;   /* 13 px */
+    --text-xs--line-height: calc(1.25 / 0.8125);
 
     /* El azul de las señales de aparcamiento, que es de donde viene el nombre. */
     --color-brand-50: #eef4ff;
@@ -86,14 +99,18 @@
     }
 
     /*
-     * Los titulares van todos con la tipografía de titulares y el interletrado
-     * cerrado. Ponerlo aquí y no clase a clase es lo que hace que la página se vea
-     * de una pieza en lugar de a trozos.
+     * Los titulares llevan el interletrado cerrado, y cuanto más grandes, más:
+     * el espacio entre letras que hace legible un párrafo, en un titular de
+     * sesenta píxeles se ve como si las palabras estuvieran sueltas.
      */
     h1, h2, h3 {
-        font-family: var(--font-display);
-        letter-spacing: -0.025em;
+        letter-spacing: -0.028em;
     }
+
+    h1 {
+        letter-spacing: -0.038em;
+    }
+
 
     /* Que el ancla de una sección no quede debajo de la cabecera fija. */
     :target {
@@ -241,7 +258,7 @@
 }
 
 @utility label {
-    @apply mb-1.5 block text-xs font-semibold tracking-wide text-neutral-500 uppercase;
+    @apply mb-1.5 block text-xs font-semibold tracking-wide text-neutral-600 uppercase;
 }
 
 /* ─── Superficies ──────────────────────────────────────────────────────────── */
@@ -316,7 +333,7 @@
  * y pesa la mitad.
  */
 @utility meta-line {
-    @apply flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs font-medium text-neutral-500;
+    @apply flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs font-medium text-neutral-600;
 
     & > * + *::before {
         content: '·';
@@ -346,8 +363,12 @@
     @apply bg-accent-100 text-accent-900;
 }
 
+/*
+ * Los precios, con las cifras todas del mismo ancho: con las proporcionales, un
+ * precio que pasa de 39 a 11 encoge, y una columna de importes sale desalineada.
+ */
 @utility price {
-    @apply font-display font-bold tracking-tight text-neutral-900;
+    @apply font-bold tracking-tight text-neutral-900 tabular-nums;
 }
 
 /* ─── Enlaces ──────────────────────────────────────────────────────────────── */
